@@ -1,0 +1,17 @@
+DROP FUNCTION IF EXISTS fn_get_user_code;
+CREATE FUNCTION fn_get_user_code()
+RETURNS CHARACTER VARYING(50)
+LANGUAGE plpgsql
+	VOLATILE
+	SECURITY INVOKER
+	COST 100
+	AS $$
+DECLARE _code CHARACTER VARYING(50);
+BEGIN	
+	_code = 'U000000';
+	
+	_code = 'U' || RIGHT('000000' || (SELECT MAX(COALESCE(REPLACE("value",'U',''),'0')::INT)+1 FROM ad_user) ,6);
+		
+	RETURN _code;
+END
+$$;
