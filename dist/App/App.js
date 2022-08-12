@@ -42,6 +42,7 @@ const JWT = __importStar(require("jsonwebtoken"));
 const glob = __importStar(require("glob"));
 const bcrypt = __importStar(require("bcrypt-nodejs"));
 const ModuleGen_1 = require("./Tools/ModuleGen");
+const WindowGen_1 = require("./Tools/WindowGen");
 class App {
     constructor() {
         this.db = { sequelize: null, types: null, bcrypt: null };
@@ -77,6 +78,7 @@ class App {
                 yield this.db.sequelize.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";', { raw: true });
                 yield this.db.sequelize.query('SELECT uuid_generate_v1();', { raw: true });
                 this.modgen = new ModuleGen_1.ModuleGen(this);
+                this.wingen = new WindowGen_1.WindowGen(this);
                 yield this.startServer();
             }
             catch (e) {

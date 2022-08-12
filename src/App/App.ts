@@ -8,6 +8,7 @@ import * as glob from 'glob';
 import * as axios from 'axios';
 import * as bcrypt from 'bcrypt-nodejs';
 import { ModuleGen } from './Tools/ModuleGen';
+import { WindowGen } from './Tools/WindowGen';
 
 class App {
     public sequelize
@@ -15,6 +16,7 @@ class App {
     public db = { sequelize: null, types: null, bcrypt: null}
     public secret = 'EAAhnSTcGA7sBAJ4yxMddoOVYNI8yG0d'
     public modgen
+    public wingen
     public JWT
 
     public publicPath: string = '';
@@ -53,6 +55,7 @@ class App {
             await this.db.sequelize.query('SELECT uuid_generate_v1();', { raw: true })
 
             this.modgen = new ModuleGen(this)
+            this.wingen = new WindowGen(this)
 
             await this.startServer()
         } catch (e) {

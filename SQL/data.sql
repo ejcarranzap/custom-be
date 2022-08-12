@@ -499,7 +499,7 @@ CREATE TABLE ad_tab(
 	ad_client_id CHARACTER VARYING(32) NOT NULL,
 	ad_org_id CHARACTER VARYING(32) NOT NULL,
 	ad_window_id CHARACTER VARYING(32) NOT NULL,	
-	ad_tab_parent_id CHARACTER VARYING(32) NOT NULL,
+	ad_tab_parent_id CHARACTER VARYING(32),
 	value CHARACTER VARYING(50) NOT NULL,
 	name CHARACTER VARYING(100) NOT NULL,	
 	description VARCHAR(255) NOT NULL,
@@ -521,7 +521,7 @@ CREATE TABLE ad_tab(
 );
 ALTER TABLE ad_tab OWNER TO admin;
 INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,_UUIDT,'ad_user','Usuario','Datos Generales',0,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AT_UUIDT,'0','0',AT_UUIDW,AT_UUIDT,'ad_table','Tabla','Datos Tabla',0,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AT_UUIDT,'0','0',AT_UUIDW,NULL,'ad_table','Tabla','Datos Tabla',0,'Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_tab VALUES(AC_UUIDT,'0','0',AT_UUIDW,AT_UUIDT,'ad_column','Columna','Datos Columna',0,'Y',NOW(),'0',NOW(),'0');
 
 DROP TABLE IF EXISTS ad_field_group CASCADE;
