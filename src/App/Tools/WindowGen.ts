@@ -85,7 +85,7 @@ class WindowGen {
             field.order = o.position
             field.group = group
 
-            await me.getColumn(field)
+            /*await me.getColumn(field)*/
 
             field.default = null
             field.visible = true
