@@ -17,8 +17,8 @@ export = (app) => {
                     return null;
                 });
 
-                if(!ds) {
-                    throw new Error("Usuario/Password Invalido")
+                if (!ds) {
+                    throw new Error("Login failed")
                 }
 
                 t.commit()

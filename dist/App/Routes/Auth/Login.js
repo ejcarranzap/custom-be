@@ -27,7 +27,7 @@ module.exports = (app) => {
                     return null;
                 });
                 if (!ds) {
-                    throw new Error("Usuario/Password Invalido");
+                    throw new Error("Login failed");
                 }
                 t.commit();
                 delete ds.dataValues.password;
