@@ -11,13 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 module.exports = (app) => {
     return {
         method: 'POST',
-        path: '/api/GetWindow',
+        path: '/api/GetMenu',
         config: { auth: false },
         handler: (request, h) => __awaiter(void 0, void 0, void 0, function* () {
             const res = request.payload;
-            /*console.log('/api/GetWindow', res.id)*/
-            return app.wingen.getWindowById(res.id);
+            return app.menugen.getMenus();
         })
     };
 };
-//# sourceMappingURL=GetWindow.js.map
+//# sourceMappingURL=GetMenu.js.map

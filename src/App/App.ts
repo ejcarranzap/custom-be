@@ -9,6 +9,7 @@ import * as axios from 'axios';
 import * as bcrypt from 'bcrypt-nodejs';
 import { ModuleGen } from './Tools/ModuleGen';
 import { WindowGen } from './Tools/WindowGen';
+import { MenuGen } from './Tools/MenuGen';
 
 class App {
     public sequelize
@@ -17,6 +18,7 @@ class App {
     public secret = 'EAAhnSTcGA7sBAJ4yxMddoOVYNI8yG0d'
     public modgen
     public wingen
+    public menugen
     public JWT
 
     public publicPath: string = '';
@@ -35,6 +37,7 @@ class App {
             this.db.bcrypt = bcrypt
 
             require('pg').types.setTypeParser(1114, function(stringValue) {
+                /*console.log('stringValue: ', stringValue)*/
                 return stringValue.substring(0, 10) + 'T' + stringValue.substring(11) + '.000Z';
             })
 
@@ -48,7 +51,10 @@ class App {
                     freezeTableName: true,
                     timestamps: false
                 },
-                timezone: '-06:00'
+                timezone: '-06:00',
+                dialectOptions: {
+                    useUTC: false
+                }
             });
             await this.db.sequelize.authenticate()
             await this.db.sequelize.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";', { raw: true })
@@ -56,6 +62,7 @@ class App {
 
             this.modgen = new ModuleGen(this)
             this.wingen = new WindowGen(this)
+            this.menugen = new MenuGen(this)
 
             await this.startServer()
         } catch (e) {
@@ -80,6 +87,12 @@ class App {
                 files: {
                     relativeTo: me.publicPath
                 },
+                /*cors: {
+                    'origin': ['http://localhost:3002'],
+                    'headers': ['Accept', 'Content-Type'],
+                    'additionalHeaders': ['X-Requested-With']
+                }*/
+                cors: true
             }
         });
 

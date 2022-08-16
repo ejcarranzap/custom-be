@@ -1,6 +1,6 @@
 SELECT NOW();
-ALTER DATABASE test SET timezone TO 'UTC-6';
-ALTER USER "admin" SET timezone TO 'UTC-6';
+--ALTER DATABASE test SET timezone TO 'UTC-6';
+--ALTER USER "admin" SET timezone TO 'UTC-6';
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 SELECT crypt('car', gen_salt('MD5'));
@@ -246,7 +246,7 @@ CREATE TABLE ad_user(
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 ALTER TABLE ad_user OWNER TO admin;
-INSERT INTO ad_user VALUES('0','0','0','U00001','admin','$2a$10$ailMVjeYYsDs9YZ3t6ujG.KqbvVDXzaJNZR4Q.KXo8SWyCiSJsqN2','ejcarranzap@gmail.com',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,
+INSERT INTO ad_user VALUES('0','0','0','U00001','admin','$2a$10$ailMVjeYYsDs9YZ3t6ujG.KqbvVDXzaJNZR4Q.KXo8SWyCiSJsqN2','ejcarranzap@gmail.com','Administrador','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,
 						   'Y',NOW(),'0',NOW(),'0');
 
 DROP TABLE IF EXISTS ad_module CASCADE;

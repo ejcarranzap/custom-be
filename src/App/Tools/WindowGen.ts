@@ -22,7 +22,7 @@ class WindowGen {
 
             for (var i = 0; i < ds.length; i++) {
                 let o = ds[i]
-                ret.tabs.push(await me.getTab(o))
+                ret.tabs.push(await me.getTab(o, null))
             }
 
             /*t.commit();*/
@@ -33,15 +33,17 @@ class WindowGen {
         }
     }
 
-    async getTab(o) {
+    async getTab(o, parent) {
         var me = this
         let model = me.app.db.sequelize.models[o.value];
         var modelKey = model.primaryKeyAttributes[0];
         var tab: any = {}
         tab.id = o.ad_tab_id
-        tab.restUrl = o.value
+        tab.restUrl = 'api/' + o.value
         tab.key = modelKey
+        if(parent) tab.parentkey = parent.key
         tab.description = o.description
+        await me.getTable(tab, o)
         tab.groupkey = null
         tab.groups = []
         tab.fields = []
@@ -56,7 +58,7 @@ class WindowGen {
         let ds = await me.app.db.sequelize.models['ad_tab'].findAll({ where: { ad_tab_parent_id: { [Op.eq]: tab.id } } })
         for (var i = 0; i < ds.length; i++) {
             let o = ds[i]
-            tab.tabs.push(await me.getTab(o))
+            tab.tabs.push(await me.getTab(o, tab))
         }
     }
 
@@ -73,7 +75,7 @@ class WindowGen {
             group.description = valuesGroup.description
 
             if (!tab.groupkey) {
-                tab.groupkey = 'ad_field_group'
+                tab.groupkey = 'ad_field_group_id'
             }
 
             if (me.groupExists(tab.groups, group) == false) {
@@ -85,7 +87,7 @@ class WindowGen {
             field.order = o.position
             field.group = group
 
-            /*await me.getColumn(field)*/
+            await me.getColumn(field, o)
 
             field.default = null
             field.visible = true
@@ -95,9 +97,21 @@ class WindowGen {
         }
     }
 
-    async getColumn(field) {
+    async getTable(tab, o){
         var me = this
-        let dsColumn = await me.app.db.sequelize.models['ad_column'].findOne({ where: { ad_field_id: field.ad_field_id } })
+        let dsTable = await me.app.db.sequelize.models['ad_table'].findOne({ where: { value: o.value } })
+        var valuesTable = dsTable.dataValues
+        var table: any = {}
+        table.id = valuesTable.ad_table_id
+        table.name = valuesTable.name
+        table.description = valuesTable.description
+        table.active = (valuesTable.isactive == 'Y' ? 1 : 0)
+        tab.table = table
+    }
+
+    async getColumn(field, o) {
+        var me = this
+        let dsColumn = await me.app.db.sequelize.models['ad_column'].findOne({ where: { ad_column_id: o.ad_column_id } })
         var valuesColumn = dsColumn.dataValues
         var col: any = {}
         col.id = valuesColumn.ad_column_id

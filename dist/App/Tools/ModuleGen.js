@@ -38,6 +38,7 @@ const uuid_1 = require("uuid");
 class ModuleGen {
     constructor(app) {
         this.app = app;
+        this.auth = { auth: false };
         this.processAction = (data) => {
             switch (data.action) {
                 case 'get_objects':
@@ -193,7 +194,8 @@ class ModuleGen {
                     var prms = {};
                     /*prms[modelKey] = request.params.id*/
                     /*console.log('params: ', prms)*/
-                    ds = yield model.findAll();
+                    /*console.log('query: ', request.query)*/
+                    ds = yield model.findAll({ where: request.query });
                     t.commit();
                     if (ds)
                         return { success: true, data: ds };
@@ -210,7 +212,7 @@ class ModuleGen {
         app.server.route({
             method: 'GET',
             path: '/api/' + table_name,
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
         console.log('Registered route GETALL: ', '/api/' + table.table_name);
@@ -247,7 +249,7 @@ class ModuleGen {
         app.server.route({
             method: 'GET',
             path: '/api/' + table_name + '/{id}',
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
         console.log('Registered route GET: ', '/api/' + table.table_name);
@@ -282,7 +284,7 @@ class ModuleGen {
         app.server.route({
             method: 'POST',
             path: '/api/' + table_name,
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
         console.log('Registered route POST: ', '/api/' + table.table_name);
@@ -303,6 +305,8 @@ class ModuleGen {
                     var prms = {};
                     prms[modelKey] = request.params.id;
                     /*console.log('params: ', prms)*/
+                    delete idata.updated;
+                    delete idata.created;
                     yield model.update(idata, { where: prms });
                     ds = yield model.findOne({ where: prms });
                     t.commit();
@@ -321,7 +325,7 @@ class ModuleGen {
         app.server.route({
             method: 'PATCH',
             path: '/api/' + table_name + '/{id}',
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
         console.log('Registered route PATCH: ', '/api/' + table.table_name);
@@ -359,7 +363,7 @@ class ModuleGen {
         app.server.route({
             method: 'DELETE',
             path: '/api/' + table_name + '/{id}',
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
         console.log('Registered route DELETE: ', '/api/' + table.table_name);

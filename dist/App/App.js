@@ -43,6 +43,7 @@ const glob = __importStar(require("glob"));
 const bcrypt = __importStar(require("bcrypt-nodejs"));
 const ModuleGen_1 = require("./Tools/ModuleGen");
 const WindowGen_1 = require("./Tools/WindowGen");
+const MenuGen_1 = require("./Tools/MenuGen");
 class App {
     constructor() {
         this.db = { sequelize: null, types: null, bcrypt: null };
@@ -60,6 +61,7 @@ class App {
                 this.db.types = sequelize_1.Sequelize;
                 this.db.bcrypt = bcrypt;
                 require('pg').types.setTypeParser(1114, function (stringValue) {
+                    console.log('stringValue: ', stringValue);
                     return stringValue.substring(0, 10) + 'T' + stringValue.substring(11) + '.000Z';
                 });
                 this.db.sequelize = new sequelize_1.Sequelize('test', 'admin', '1234', {
@@ -72,13 +74,17 @@ class App {
                         freezeTableName: true,
                         timestamps: false
                     },
-                    timezone: '-06:00'
+                    timezone: '-06:00',
+                    dialectOptions: {
+                        useUTC: false
+                    }
                 });
                 yield this.db.sequelize.authenticate();
                 yield this.db.sequelize.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";', { raw: true });
                 yield this.db.sequelize.query('SELECT uuid_generate_v1();', { raw: true });
                 this.modgen = new ModuleGen_1.ModuleGen(this);
                 this.wingen = new WindowGen_1.WindowGen(this);
+                this.menugen = new MenuGen_1.MenuGen(this);
                 yield this.startServer();
             }
             catch (e) {
@@ -101,6 +107,12 @@ class App {
                     files: {
                         relativeTo: me.publicPath
                     },
+                    /*cors: {
+                        'origin': ['http://localhost:3002'],
+                        'headers': ['Accept', 'Content-Type'],
+                        'additionalHeaders': ['X-Requested-With']
+                    }*/
+                    cors: true
                 }
             });
             yield me.server.register([Inert, HapiJWT]);

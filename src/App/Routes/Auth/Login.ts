@@ -7,6 +7,7 @@ export = (app) => {
             const db = app.db
             var t = await db.sequelize.transaction({ autocommit: false });
             try {
+                console.log('Login')
                 const res = request.payload
                 var ds
                 let model = db.sequelize.models['ad_user'];
@@ -24,7 +25,7 @@ export = (app) => {
                 t.commit()
 
                 delete ds.dataValues.password;
-                return { success: true, accessToken: app.JWT.sign(ds.dataValues, app.secret), userToReturn: ds.dataValues };
+                return { success: true, accessToken: app.JWT.sign(ds.dataValues, app.secret), user: ds.dataValues };
             } catch (e) {
                 console.log(e.stack);
                 t.rollback();

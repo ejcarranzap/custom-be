@@ -3,6 +3,8 @@ import * as glob from 'glob';
 import { v4 } from 'uuid'
 
 class ModuleGen {
+    private auth = { auth: false }
+
     constructor(private app: App) { }
     processAction = (data) => {
         switch (data.action) {
@@ -71,7 +73,8 @@ class ModuleGen {
                 var prms = {}
                 /*prms[modelKey] = request.params.id*/
                 /*console.log('params: ', prms)*/
-                ds = await model.findAll();
+                /*console.log('query: ', request.query)*/
+                ds = await model.findAll({ where: request.query });
 
                 t.commit();
 
@@ -89,7 +92,7 @@ class ModuleGen {
         app.server.route({
             method: 'GET',
             path: '/api/' + table_name,
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
 
@@ -129,7 +132,7 @@ class ModuleGen {
         app.server.route({
             method: 'GET',
             path: '/api/' + table_name + '/{id}',
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
 
@@ -168,7 +171,7 @@ class ModuleGen {
         app.server.route({
             method: 'POST',
             path: '/api/' + table_name,
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
 
@@ -192,6 +195,8 @@ class ModuleGen {
                 prms[modelKey] = request.params.id
                 
                 /*console.log('params: ', prms)*/
+                delete idata.updated
+                delete idata.created
                 await model.update(idata, { where: prms });
                 ds = await model.findOne({ where: prms })
 
@@ -211,7 +216,7 @@ class ModuleGen {
         app.server.route({
             method: 'PATCH',
             path: '/api/' + table_name + '/{id}',
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
 
@@ -253,7 +258,7 @@ class ModuleGen {
         app.server.route({
             method: 'DELETE',
             path: '/api/' + table_name + '/{id}',
-            config: { auth: false },
+            config: me.auth,
             handler: fn
         });
 

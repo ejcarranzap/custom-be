@@ -32,7 +32,7 @@ class WindowGen {
                 ds = yield app.db.sequelize.models['ad_tab'].findAll({ where: { ad_window_id: id, ad_tab_parent_id: { [Op.eq]: null } } });
                 for (var i = 0; i < ds.length; i++) {
                     let o = ds[i];
-                    ret.tabs.push(yield me.getTab(o));
+                    ret.tabs.push(yield me.getTab(o, null));
                 }
                 /*t.commit();*/
                 return { data: ret };
@@ -43,16 +43,19 @@ class WindowGen {
             }
         });
     }
-    getTab(o) {
+    getTab(o, parent) {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
             let model = me.app.db.sequelize.models[o.value];
             var modelKey = model.primaryKeyAttributes[0];
             var tab = {};
             tab.id = o.ad_tab_id;
-            tab.restUrl = o.value;
+            tab.restUrl = 'api/' + o.value;
             tab.key = modelKey;
+            if (parent)
+                tab.parentkey = parent.key;
             tab.description = o.description;
+            yield me.getTable(tab, o);
             tab.groupkey = null;
             tab.groups = [];
             tab.fields = [];
@@ -68,7 +71,7 @@ class WindowGen {
             let ds = yield me.app.db.sequelize.models['ad_tab'].findAll({ where: { ad_tab_parent_id: { [Op.eq]: tab.id } } });
             for (var i = 0; i < ds.length; i++) {
                 let o = ds[i];
-                tab.tabs.push(yield me.getTab(o));
+                tab.tabs.push(yield me.getTab(o, tab));
             }
         });
     }
@@ -85,7 +88,7 @@ class WindowGen {
                 group.name = valuesGroup.name;
                 group.description = valuesGroup.description;
                 if (!tab.groupkey) {
-                    tab.groupkey = 'ad_field_group';
+                    tab.groupkey = 'ad_field_group_id';
                 }
                 if (me.groupExists(tab.groups, group) == false) {
                     tab.groups.push(group);
@@ -94,7 +97,7 @@ class WindowGen {
                 field.id = o.ad_field_id;
                 field.order = o.position;
                 field.group = group;
-                yield me.getColumn(field);
+                yield me.getColumn(field, o);
                 field.default = null;
                 field.visible = true;
                 field.visible_grid = true;
@@ -102,10 +105,23 @@ class WindowGen {
             }
         });
     }
-    getColumn(field) {
+    getTable(tab, o) {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
-            let dsColumn = yield me.app.db.sequelize.models['ad_column'].findOne({ where: { ad_field_id: field.ad_field_id } });
+            let dsTable = yield me.app.db.sequelize.models['ad_table'].findOne({ where: { value: o.value } });
+            var valuesTable = dsTable.dataValues;
+            var table = {};
+            table.id = valuesTable.ad_table_id;
+            table.name = valuesTable.name;
+            table.description = valuesTable.description;
+            table.active = (valuesTable.isactive == 'Y' ? 1 : 0);
+            tab.table = table;
+        });
+    }
+    getColumn(field, o) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var me = this;
+            let dsColumn = yield me.app.db.sequelize.models['ad_column'].findOne({ where: { ad_column_id: o.ad_column_id } });
             var valuesColumn = dsColumn.dataValues;
             var col = {};
             col.id = valuesColumn.ad_column_id;
