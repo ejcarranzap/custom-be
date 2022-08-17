@@ -61,7 +61,7 @@ class App {
                 this.db.types = sequelize_1.Sequelize;
                 this.db.bcrypt = bcrypt;
                 require('pg').types.setTypeParser(1114, function (stringValue) {
-                    console.log('stringValue: ', stringValue);
+                    /*console.log('stringValue: ', stringValue)*/
                     return stringValue.substring(0, 10) + 'T' + stringValue.substring(11) + '.000Z';
                 });
                 this.db.sequelize = new sequelize_1.Sequelize('test', 'admin', '1234', {

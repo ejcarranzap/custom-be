@@ -41,7 +41,7 @@ class WindowGen {
         tab.id = o.ad_tab_id
         tab.restUrl = 'api/' + o.value
         tab.key = modelKey
-        if(parent) tab.parentkey = parent.key
+        if (parent) tab.parentkey = parent.key
         tab.description = o.description
         await me.getTable(tab, o)
         tab.groupkey = null
@@ -97,7 +97,7 @@ class WindowGen {
         }
     }
 
-    async getTable(tab, o){
+    async getTable(tab, o) {
         var me = this
         let dsTable = await me.app.db.sequelize.models['ad_table'].findOne({ where: { value: o.value } })
         var valuesTable = dsTable.dataValues
@@ -118,9 +118,40 @@ class WindowGen {
         col.name = valuesColumn.value
         col.description = valuesColumn.description
         col.label = valuesColumn.name
-        col.type = 'text'
+        await me.getDataType(col, valuesColumn)
         col.is_pk = (valuesColumn.ispk == 'Y' ? 1 : 0)
         field.column = col
+    }
+
+    async getDataType(col, o) {
+        var me = this
+        let dsDataType = await me.app.db.sequelize.models['ad_datatype'].findOne({ where: { ad_datatype_id: o.ad_datatype_id } })
+        var valuesDataType = dsDataType.dataValues
+        var type = valuesDataType.value
+        col.type = await me.getObjDataType(type)
+        if (col.type == 'select') {
+            col.restUrl = 'api/' + o.ref_table
+            col.field_key = o.ref_table_key_field
+            col.field_text = o.ref_table_text_field
+        }
+
+    }
+
+    async getObjDataType(type) {
+        var type_ = ''
+        switch (type) {
+            case 'TEXT': type_ = 'text'; break;
+            case 'NUMBER': type_ = 'number'; break;
+            case 'SELECT': type_ = 'select'; break;
+            case 'YESNO': type_ = 'yesno'; break;
+            case 'PASSWORD': type_ = 'password'; break;
+            case 'EMAIL': type_ = 'email'; break;
+            case 'DATE': type_ = 'date'; break;
+            case 'IMAGE': type_ = 'image'; break;
+            case 'BUTTON': type_ = 'action'; break;
+            default: type_ = 'text'
+        }
+        return type_
     }
 
     groupExists(groups, group) {
