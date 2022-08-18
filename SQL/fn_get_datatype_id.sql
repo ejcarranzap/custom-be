@@ -45,14 +45,14 @@ BEGIN
 		FROM information_schema.tables
 		WHERE 1 = 1
 		AND table_schema = 'public'		
-		AND table_name NOT IN('User')
+		AND table_catalog = 'test'
 	),
 	xColumn AS (
 		SELECT table_name,column_name,data_type,character_maximum_length,numeric_precision,numeric_scale 
 		FROM INFORMATION_SCHEMA.COLUMNS 
 		WHERE 1 = 1 
 		AND TABLE_SCHEMA = 'public' 
-		AND table_catalog = 'app'
+		AND table_catalog = 'test'
 	),
 	xConstraint AS (
 		SELECT tc.constraint_name,
@@ -100,6 +100,7 @@ BEGIN
 	C.references_table ref_table,
 	C.references_field ref_table_key_field,
 	'name' ref_table_text_field,
+	NULL icon,
 	'Y' isactive,
 	NOW() created,
 	'0' createdby,
