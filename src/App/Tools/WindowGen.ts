@@ -135,6 +135,12 @@ class WindowGen {
             col.field_text = o.ref_table_text_field
         }
 
+        if (col.type == 'action') {
+            col.okLabel = 'Ok'
+            col.cancelLabel = 'Cancel'
+            col.icon = o.icon
+        }
+
     }
 
     async getObjDataType(type) {

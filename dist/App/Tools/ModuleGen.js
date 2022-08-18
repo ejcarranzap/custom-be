@@ -307,6 +307,7 @@ class ModuleGen {
                     /*console.log('params: ', prms)*/
                     delete idata.updated;
                     delete idata.created;
+                    /*console.log('idata: ', idata)*/
                     yield model.update(idata, { where: prms });
                     ds = yield model.findOne({ where: prms });
                     t.commit();

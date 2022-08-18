@@ -145,6 +145,11 @@ class WindowGen {
                 col.field_key = o.ref_table_key_field;
                 col.field_text = o.ref_table_text_field;
             }
+            if (col.type == 'action') {
+                col.okLabel = 'Ok';
+                col.cancelLabel = 'Cancel';
+                col.icon = o.icon;
+            }
         });
     }
     getObjDataType(type) {

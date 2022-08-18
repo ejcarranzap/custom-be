@@ -372,6 +372,7 @@ CREATE TABLE ad_column(
 	ref_table CHARACTER VARYING(50),
 	ref_table_key_field CHARACTER VARYING(50),
 	ref_table_text_field CHARACTER VARYING(50),
+	icon CHARACTER VARYING(50),
 	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	createdby CHARACTER VARYING(32) NOT NULL,
@@ -389,55 +390,55 @@ CREATE TABLE ad_column(
 	CONSTRAINT ad_column_unique UNIQUE(ad_table_id,value)
 );
 ALTER TABLE ad_column OWNER TO admin;
-INSERT INTO ad_column VALUES(_UUID_COL_ID,'0','0',_UUID,_UUID_TEXT,'ad_user_id','ID','ID user',NULL,'Y','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_ID_CLIENT,'0','0',_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_ID_ORG,'0','0',_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_VALUE,'0','0',_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_NAME,'0','0',_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_PASSWORD,'0','0',_UUID,_UUID_PASSWORD,'password','Password','Password',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_ISACTIVE,'0','0',_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_ID,'0','0',_UUID,_UUID_TEXT,'ad_user_id','ID','ID user',NULL,'Y','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_ID_CLIENT,'0','0',_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_ID_ORG,'0','0',_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_VALUE,'0','0',_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_NAME,'0','0',_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_PASSWORD,'0','0',_UUID,_UUID_PASSWORD,'password','Password','Password',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_ISACTIVE,'0','0',_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
 
 /**/
-INSERT INTO ad_column VALUES(_UUID_COL_EMAIL,'0','0',_UUID,_UUID_EMAIL,'email','Email','Email',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_FIRST_NAME,'0','0',_UUID,_UUID_TEXT,'first_name','First Name','First Name',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_LAST_NAME,'0','0',_UUID,_UUID_TEXT,'last_name','Last Name','Last Name',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_PHONE_NUMBER,'0','0',_UUID,_UUID_TEXT,'phone_number','Phone Number','Phone Number',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_BIRTH_DATE,'0','0',_UUID,_UUID_DATE,'birth_date','Birth Date','Birth Date',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_IMAGE,'0','0',_UUID,_UUID_IMAGE,'image','Image','Image',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_DEVICE,'0','0',_UUID,_UUID_TEXT,'device','Device','Device',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_DEVICE_MODEL,'0','0',_UUID,_UUID_TEXT,'device_model','Device Model','Device Model',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_SO,'0','0',_UUID,_UUID_TEXT,'so','SO','SO',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(_UUID_COL_SO_VERSION,'0','0',_UUID,_UUID_TEXT,'so_version','SO VERSION','SO VERSION',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_EMAIL,'0','0',_UUID,_UUID_EMAIL,'email','Email','Email',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_FIRST_NAME,'0','0',_UUID,_UUID_TEXT,'first_name','First Name','First Name',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_LAST_NAME,'0','0',_UUID,_UUID_TEXT,'last_name','Last Name','Last Name',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_PHONE_NUMBER,'0','0',_UUID,_UUID_TEXT,'phone_number','Phone Number','Phone Number',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_BIRTH_DATE,'0','0',_UUID,_UUID_DATE,'birth_date','Birth Date','Birth Date',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_IMAGE,'0','0',_UUID,_UUID_IMAGE,'image','Image','Image',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_DEVICE,'0','0',_UUID,_UUID_TEXT,'device','Device','Device',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_DEVICE_MODEL,'0','0',_UUID,_UUID_TEXT,'device_model','Device Model','Device Model',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_SO,'0','0',_UUID,_UUID_TEXT,'so','SO','SO',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(_UUID_COL_SO_VERSION,'0','0',_UUID,_UUID_TEXT,'so_version','SO VERSION','SO VERSION',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
 /**/
 
 
 /*AT_COLUMNS*/
-INSERT INTO ad_column VALUES(AT_UUID_COL_ID,'0','0',AT_UUID,_UUID_TEXT,'ad_table_id','ID','ID table',NULL,'Y','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AT_UUID_COL_AD_CLIENT_ID,'0','0',AT_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AT_UUID_COL_AD_ORG_ID,'0','0',AT_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AT_UUID_COL_AD_PACKAGE_ID,'0','0',AT_UUID,_UUID_SELECT,'ad_package_id','ID package','ID package',NULL,'N','Y','ad_package','ad_package_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AT_UUID_COL_VALUE,'0','0',AT_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AT_UUID_COL_NAME,'0','0',AT_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AT_UUID_COL_DESCRIPTION,'0','0',AT_UUID,_UUID_TEXT,'description','Description','Description',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AT_UUID_COL_ISACTIVE,'0','0',AT_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AT_UUID_COL_BTN_GETCOL,'0','0',AT_UUID,_UUID_BUTTON,'btn_getcol','Get Columns','Get Columns','getColumnService','N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_ID,'0','0',AT_UUID,_UUID_TEXT,'ad_table_id','ID','ID table',NULL,'Y','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_AD_CLIENT_ID,'0','0',AT_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_AD_ORG_ID,'0','0',AT_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_AD_PACKAGE_ID,'0','0',AT_UUID,_UUID_SELECT,'ad_package_id','ID package','ID package',NULL,'N','Y','ad_package','ad_package_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_VALUE,'0','0',AT_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_NAME,'0','0',AT_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_DESCRIPTION,'0','0',AT_UUID,_UUID_TEXT,'description','Description','Description',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_ISACTIVE,'0','0',AT_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AT_UUID_COL_BTN_GETCOL,'0','0',AT_UUID,_UUID_BUTTON,'btn_getcol','Get Columns','Get Columns','getColumnService','N','N',NULL,NULL,NULL,'mdi-timer-sand-complete','Y',NOW(),'0',NOW(),'0');
 /*AT_COLUMNS*/
 
 /*AC_COLUMNS*/
-INSERT INTO ad_column VALUES(AC_UUID_COL_ID,'0','0',AC_UUID,_UUID_TEXT,'ad_column_id','ID','ID column',NULL,'Y','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_AD_CLIENT_ID,'0','0',AC_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_AD_ORG_ID,'0','0',AC_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_AD_TABLE_ID,'0','0',AC_UUID,_UUID_SELECT,'ad_table_id','ID table','ID table',NULL,'N','Y','ad_table','ad_table_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_AD_DATATYPE_ID,'0','0',AC_UUID,_UUID_SELECT,'ad_datatype_id','ID datatype','ID datatype',NULL,'N','Y','ad_datatype','ad_datatype_id','name','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_VALUE,'0','0',AC_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_NAME,'0','0',AC_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_DESCRIPTION,'0','0',AC_UUID,_UUID_TEXT,'description','Description','Description',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_ISPK,'0','0',AC_UUID,_UUID_YESNO,'ispk','IsPK','IsPK',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_ISFK,'0','0',AC_UUID,_UUID_YESNO,'isfk','IsFK','IsFK',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_REF_TABLE,'0','0',AC_UUID,_UUID_TEXT,'ref_table','Ref Table','Ref Table',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_REF_TABLE_KEY_FIELD,'0','0',AC_UUID,_UUID_TEXT,'table_ref_key_field','Ref Key Field','Ref Key Field',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_REF_TABLE_TEXT_FIELD,'0','0',AC_UUID,_UUID_TEXT,'table_ref_text_field','Ref Text Field','Ref Text Field',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_column VALUES(AC_UUID_COL_ISACTIVE,'0','0',AC_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_ID,'0','0',AC_UUID,_UUID_TEXT,'ad_column_id','ID','ID column',NULL,'Y','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_AD_CLIENT_ID,'0','0',AC_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_AD_ORG_ID,'0','0',AC_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_AD_TABLE_ID,'0','0',AC_UUID,_UUID_SELECT,'ad_table_id','ID table','ID table',NULL,'N','Y','ad_table','ad_table_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_AD_DATATYPE_ID,'0','0',AC_UUID,_UUID_SELECT,'ad_datatype_id','ID datatype','ID datatype',NULL,'N','Y','ad_datatype','ad_datatype_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_VALUE,'0','0',AC_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_NAME,'0','0',AC_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_DESCRIPTION,'0','0',AC_UUID,_UUID_TEXT,'description','Description','Description',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_ISPK,'0','0',AC_UUID,_UUID_YESNO,'ispk','IsPK','IsPK',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_ISFK,'0','0',AC_UUID,_UUID_YESNO,'isfk','IsFK','IsFK',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_REF_TABLE,'0','0',AC_UUID,_UUID_TEXT,'ref_table','Ref Table','Ref Table',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_REF_TABLE_KEY_FIELD,'0','0',AC_UUID,_UUID_TEXT,'table_ref_key_field','Ref Key Field','Ref Key Field',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_REF_TABLE_TEXT_FIELD,'0','0',AC_UUID,_UUID_TEXT,'table_ref_text_field','Ref Text Field','Ref Text Field',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AC_UUID_COL_ISACTIVE,'0','0',AC_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
 /*AC_COLUMNS*/
 
 DROP TABLE IF EXISTS ad_window CASCADE;

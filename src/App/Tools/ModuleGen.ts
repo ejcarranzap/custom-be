@@ -47,11 +47,11 @@ class ModuleGen {
             tables = tables.data;
             /*console.log('tables: ',tables);*/
             for (var table of tables.ref_table) {
-                me.registerRouteGetAll(table)  
-                me.registerRouteGet(table)  
-                me.registerRoutePost(table) 
-                me.registerRoutePatch(table)  
-                me.registerRouteDelete(table)               
+                me.registerRouteGetAll(table)
+                me.registerRouteGet(table)
+                me.registerRoutePost(table)
+                me.registerRoutePatch(table)
+                me.registerRouteDelete(table)
             }
         } catch (e) {
             console.log('Register Routes: ', e)
@@ -151,7 +151,7 @@ class ModuleGen {
                 var ds
                 let model = db.sequelize.models[table_name];
                 var idata = request.payload
-                
+
                 /*console.log('params: ', prms)*/
                 ds = await model.create(idata, { transaction: t, hooks: true, individualHooks: true });
 
@@ -193,11 +193,13 @@ class ModuleGen {
                 var modelKey = model.primaryKeyAttributes[0];
                 var prms = {}
                 prms[modelKey] = request.params.id
-                
+
                 /*console.log('params: ', prms)*/
                 delete idata.updated
                 delete idata.created
-                await model.update(idata, { where: prms });
+
+                /*console.log('idata: ', idata)*/
+                await model.update(idata, { where: prms })
                 ds = await model.findOne({ where: prms })
 
                 t.commit();
@@ -237,7 +239,7 @@ class ModuleGen {
                 var modelKey = model.primaryKeyAttributes[0];
                 var prms = {}
                 prms[modelKey] = request.params.id
-                
+
                 /*console.log('params: ', prms)*/
                 ds = await model.findOne({ where: prms })
                 await model.destroy({ where: prms });
