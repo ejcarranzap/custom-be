@@ -12,7 +12,7 @@ BEGIN
 	CASE 
 	WHEN _datatype = 'timestamp' THEN _type = 'DATE';
 	WHEN _datatype = 'select' THEN _type = 'SELECT';
-	WHEN _datatype = 'character varying' AND _len = 1 THEN 'YESNO'
+	WHEN (_datatype = 'character varying' AND _len = 1) THEN _type = 'YESNO';
 	ELSE
 		_type = 'TEXT';
 	END CASE;
