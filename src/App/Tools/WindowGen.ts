@@ -103,6 +103,7 @@ class WindowGen {
         var valuesTable = dsTable.dataValues
         var table: any = {}
         table.id = valuesTable.ad_table_id
+        table.value = valuesTable.value
         table.name = valuesTable.name
         table.description = valuesTable.description
         table.active = (valuesTable.isactive == 'Y' ? 1 : 0)

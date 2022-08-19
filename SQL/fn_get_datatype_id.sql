@@ -1,5 +1,5 @@
 DROP FUNCTION IF EXISTS fn_get_datatype_id;
-CREATE FUNCTION fn_get_datatype_id(_datatype CHARACTER VARYING(50))
+CREATE FUNCTION fn_get_datatype_id(_datatype CHARACTER VARYING(50), _len INT)
 RETURNS CHARACTER VARYING(32)
 LANGUAGE plpgsql
 	VOLATILE
@@ -12,6 +12,7 @@ BEGIN
 	CASE 
 	WHEN _datatype = 'timestamp' THEN _type = 'DATE';
 	WHEN _datatype = 'select' THEN _type = 'SELECT';
+	WHEN _datatype = 'character varying' AND _len = 1 THEN 'YESNO'
 	ELSE
 		_type = 'TEXT';
 	END CASE;
@@ -53,6 +54,7 @@ BEGIN
 		WHERE 1 = 1 
 		AND TABLE_SCHEMA = 'public' 
 		AND table_catalog = 'test'
+		AND column_name NOT IN('updated','created','updatedby','createdby')
 	),
 	xConstraint AS (
 		SELECT tc.constraint_name,
@@ -90,7 +92,7 @@ BEGIN
 	A.ad_client_id,
 	A.ad_org_id,
 	_ad_table_id ad_table_id,	
-	fn_get_datatype_id(CASE WHEN C.constraint_type = 'FOREIGN KEY' THEN 'select' ELSE B.data_type END) ad_datatype_id,
+	fn_get_datatype_id(CASE WHEN C.constraint_type = 'FOREIGN KEY' THEN 'select' ELSE B.data_type END, B.character_maximum_length) ad_datatype_id,
 	B.column_name "value",
 	B.column_name "name",
 	B.column_name "description",
@@ -99,7 +101,7 @@ BEGIN
 	CASE WHEN C.constraint_type = 'FOREIGN KEY' THEN 'Y' ELSE 'N' END isfk,
 	C.references_table ref_table,
 	C.references_field ref_table_key_field,
-	'name' ref_table_text_field,
+	CASE WHEN C.constraint_type = 'FOREIGN KEY' THEN 'name' ELSE NULL END ref_table_text_field,
 	NULL icon,
 	'Y' isactive,
 	NOW() created,

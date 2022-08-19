@@ -10,20 +10,23 @@ import * as bcrypt from 'bcrypt-nodejs';
 import { ModuleGen } from './Tools/ModuleGen';
 import { WindowGen } from './Tools/WindowGen';
 import { MenuGen } from './Tools/MenuGen';
+import { CallProcess } from './Tools/CallProcess';
 
 class App {
     public sequelize
     public server
-    public db = { sequelize: null, types: null, bcrypt: null}
+    public db = { sequelize: null, types: null, bcrypt: null }
     public secret = 'EAAhnSTcGA7sBAJ4yxMddoOVYNI8yG0d'
     public modgen
     public wingen
     public menugen
+    public callprocess
     public JWT
 
-    public publicPath: string = '';
-    public routesPath: string = '';
-    public hooksPath: string = '';
+    public publicPath: string = ''
+    public routesPath: string = ''
+    public hooksPath: string = ''
+    public processPath: string = ''
 
     constructor() {
         console.log('App constructor')
@@ -36,7 +39,7 @@ class App {
             this.db.types = Sequelize
             this.db.bcrypt = bcrypt
 
-            require('pg').types.setTypeParser(1114, function(stringValue) {
+            require('pg').types.setTypeParser(1114, function (stringValue) {
                 /*console.log('stringValue: ', stringValue)*/
                 return stringValue.substring(0, 10) + 'T' + stringValue.substring(11) + '.000Z';
             })
@@ -52,27 +55,27 @@ class App {
                     timestamps: false,
                     hooks: {
                         beforeCreate: (model: any, options) => {
-                          /*console.log(model.constructor.name);*/
-                          console.log('created hook')
-                          if(model.constructor.name=='ad_user'){
-                            return
-                          }
-                          var current = this.db.sequelize.fn('NOW');
-                          model.updated = current
-                          model.created = current
-                          model.updatedby = '0'
-                          model.createdby = '0'
+                            /*console.log(model.constructor.name);*/
+                            console.log('created hook')
+                            if (model.constructor.name == 'ad_user') {
+                                return
+                            }
+                            var current = this.db.sequelize.fn('NOW');
+                            model.updated = current
+                            model.created = current
+                            model.updatedby = '0'
+                            model.createdby = '0'
                         },
                         beforeUpdate: (model: any, options) => {
                             console.log('updated hook')
-                            if(model.constructor.name=='ad_user'){
+                            if (model.constructor.name == 'ad_user') {
                                 return
-                              }
-                              var current = this.db.sequelize.fn('NOW');
-                              model.updated = current
-                              model.updatedby = '0'
+                            }
+                            var current = this.db.sequelize.fn('NOW');
+                            model.updated = current
+                            model.updatedby = '0'
                         },
-                        beforeBulkUpdate: function(options) {
+                        beforeBulkUpdate: function (options) {
                             options.individualHooks = true;
                         }
                     }
@@ -89,6 +92,7 @@ class App {
             this.modgen = new ModuleGen(this)
             this.wingen = new WindowGen(this)
             this.menugen = new MenuGen(this)
+            this.callprocess = new CallProcess(this)
 
             await this.startServer()
         } catch (e) {
@@ -97,100 +101,121 @@ class App {
     }
 
     async startServer() {
-        var me = this
-        me.publicPath = Path.join(__dirname, '..//..//Public');
-        me.routesPath = /*Path.join(__dirname, './/Routes//Auth')*/'./dist/App/Routes';
-        me.hooksPath = Path.join(__dirname, './/Hooks');
+        try {
+            var me = this
+            me.publicPath = Path.join(__dirname, '..//..//Public');
+            me.routesPath = './dist/App/Routes';
+            me.processPath = './dist/App/Process';
+            me.hooksPath = Path.join(__dirname, './/Hooks');
 
-        console.log('public path: ' + me.publicPath);
-        console.log('routes path: ' + me.routesPath);
+            console.log('public path: ' + me.publicPath);
+            console.log('routes path: ' + me.routesPath);
 
 
-        me.server = new Server({
-            port: 3001,
-            host: 'localhost',
-            routes: {
-                files: {
-                    relativeTo: me.publicPath
-                },
-                /*cors: {
-                    'origin': ['http://localhost:3002'],
-                    'headers': ['Accept', 'Content-Type'],
-                    'additionalHeaders': ['X-Requested-With']
-                }*/
-                cors: true
-            }
-        });
-
-        await me.server.register([Inert, HapiJWT]);
-
-        await me.server.route({
-            method: 'GET',
-            path: '/{file*}',
-            config: { auth: false },
-            handler: {
-                directory: {
-                    path: me.publicPath
-                }
-            }
-        })
-
-        me.server.ext('onPreResponse', function (request, h) {
-            const response = request.response;
-            /*console.log(request);*/
-            if (request.response.isBoom) {
-                const err = request.response;
-                const errMsg = (err.output.payload.message + ' ' + err.data);
-                const errName = (err.output.payload.error);
-                const statusCode = (err.output.payload.statusCode);
-                console.log('ERROR ONPRERESPONSE', statusCode, errMsg, errName, request.response);
-                console.log(err);
-                err.output.payload.message = err;
-            }
-
-            return h.continue;
-        });
-
-        const validate = async (decoded, request, h) => {
-            let ds = await me.db.sequelize.models['ad_user'].findOne({ where: { ad_user_id: decoded.ad_user_id } });
-
-            if (!ds) {
-                return { isValid: false }
-            } else {
-                return { isValid: true }
-            }
-        }
-
-        me.server.auth.strategy('jwt', 'jwt',
-            {
-                key: me.secret,
-                validate: validate,
-                verifyOptions: {
-                    ignoreExpiration: true,
-                    algorithms: ['HS256']
+            me.server = new Server({
+                port: 3001,
+                host: 'localhost',
+                routes: {
+                    files: {
+                        relativeTo: me.publicPath
+                    },
+                    /*cors: {
+                        'origin': ['http://localhost:3002'],
+                        'headers': ['Accept', 'Content-Type'],
+                        'additionalHeaders': ['X-Requested-With']
+                    }*/
+                    cors: true
                 }
             });
 
-        me.server.auth.default('jwt');
+            await me.server.register([Inert, HapiJWT]);
 
-        glob.sync(me.routesPath+'/**/*.js', {
-            root: __dirname
-        }).forEach(file => {
-            console.log('File: ', file, ' __dirname ', __dirname);
-            let basename = Path.basename(file);
-            let filepath = '../../' + file;
-            /*let filepath = Path.join(me.routesPath, basename);*/
+            await me.server.route({
+                method: 'GET',
+                path: '/{file*}',
+                config: { auth: false },
+                handler: {
+                    directory: {
+                        path: me.publicPath
+                    }
+                }
+            })
 
-            me.server.route(require(filepath)(me));
-            console.log('loaded route: ' + filepath);
-        });
+            me.server.ext('onPreResponse', function (request, h) {
+                const response = request.response;
+                /*console.log(request);*/
+                if (request.response.isBoom) {
+                    const err = request.response;
+                    const errMsg = (err.output.payload.message + ' ' + err.data);
+                    const errName = (err.output.payload.error);
+                    const statusCode = (err.output.payload.statusCode);
+                    console.log('ERROR ONPRERESPONSE', statusCode, errMsg, errName, request.response);
+                    console.log(err);
+                    err.output.payload.message = err;
+                }
 
-        await this.modgen.registerModels(me.hooksPath)
-        await this.modgen.registerRoutes(null)
-        await this.server.start();
+                return h.continue;
+            });
+
+            const validate = async (decoded, request, h) => {
+                let ds = await me.db.sequelize.models['ad_user'].findOne({ where: { ad_user_id: decoded.ad_user_id } });
+
+                if (!ds) {
+                    return { isValid: false }
+                } else {
+                    return { isValid: true }
+                }
+            }
+
+            me.server.auth.strategy('jwt', 'jwt',
+                {
+                    key: me.secret,
+                    validate: validate,
+                    verifyOptions: {
+                        ignoreExpiration: true,
+                        algorithms: ['HS256']
+                    }
+                });
+
+            me.server.auth.default('jwt');
+
+            glob.sync(me.routesPath + '/**/*.js', {
+                root: __dirname
+            }).forEach(file => {
+                console.log('File: ', file, ' __dirname ', __dirname);
+                let basename = Path.basename(file);
+                let filepath = '../../' + file;
+                /*let filepath = Path.join(me.routesPath, basename);*/
+
+                me.server.route(require(filepath)(me));
+                console.log('loaded route: ' + filepath);
+            });
+
+            glob.sync(me.processPath + '/**/*.js', {
+                root: __dirname
+            }).forEach(file => {
+                console.log('File: ', file, ' __dirname ', __dirname);
+                let basename = Path.basename(file).replace('.js', '');
+                let filepath = '../../' + file;
+                /*let filepath = Path.join(me.routesPath, basename);*/
+
+                let cls = require(filepath)
+                console.log(cls[Object.keys(cls)[0]], basename)
+                me[basename] = new cls[Object.keys(cls)[0]](me);
+                console.log('loaded process: ' + filepath);
+            });
+
+            await this.modgen.registerModels(me.hooksPath)
+            await this.modgen.registerRoutes(null)
+            await this.server.start();
 
 
-        console.log('Server running on %s', this.server.info.uri);
+            console.log('Server running on %s', this.server.info.uri);
+
+        } catch (e) {
+            console.log(e.stack)
+            console.log(e.message)
+        }
     }
 }
 
