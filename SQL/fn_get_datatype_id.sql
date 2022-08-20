@@ -13,6 +13,7 @@ BEGIN
 	WHEN _datatype = 'timestamp' THEN _type = 'DATE';
 	WHEN _datatype = 'select' THEN _type = 'SELECT';
 	WHEN (_datatype = 'character varying' AND _len = 1) THEN _type = 'YESNO';
+	WHEN (_datatype = 'integer') THEN _type = 'NUMBER';
 	ELSE
 		_type = 'TEXT';
 	END CASE;
@@ -55,6 +56,7 @@ BEGIN
 		AND TABLE_SCHEMA = 'public' 
 		AND table_catalog = 'test'
 		AND column_name NOT IN('updated','created','updatedby','createdby')
+		--AND column_name IN('position')
 	),
 	xConstraint AS (
 		SELECT tc.constraint_name,

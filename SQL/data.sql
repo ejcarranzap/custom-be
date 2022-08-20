@@ -177,6 +177,58 @@ DECLARE AC_UUID_COL_ISACTIVE CHARACTER VARYING(32) := fn_get_uuid();
 DECLARE AC_UUID_COL_ICON CHARACTER VARYING(32) := fn_get_uuid();
 /*END COLUMNS TABLE ad_column*/
 
+/*COLUMNS TABLE ad_window*/
+--SELECT * FROM ad_window
+DECLARE AW_UUIDT CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUIDMNU CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUIDW CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUID_COL_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUID_COL_AD_CLIENT_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUID_COL_AD_ORG_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUID_COL_VALUE CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUID_COL_NAME CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUID_COL_DESCRIPTION CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AW_UUID_COL_ISACTIVE CHARACTER VARYING(32) := fn_get_uuid();
+/*END COLUMNS TABLE ad_window*/
+
+/*COLUMNS TABLE ad_tab*/
+--SELECT * FROM ad_tab
+DECLARE AWT_UUIDT CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUIDMNU CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUIDW CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_AD_CLIENT_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_AD_ORG_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_AD_WINDOW_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_AD_TAB_PARENT_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_VALUE CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_NAME CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_DESCRIPTION CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_POSITION CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_ISACTIVE CHARACTER VARYING(32) := fn_get_uuid();
+/*END COLUMNS TABLE ad_tab*/
+
+/*COLUMNS TABLE ad_field*/
+--SELECT * FROM ad_field
+DECLARE AWF_UUIDT CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUIDMNU CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUIDW CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_AD_CLIENT_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_AD_ORG_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_AD_COLUMN_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_AD_FIELD_GROUP_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_AD_TAB_ID CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_VALUE CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_NAME CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_DESCRIPTION CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_POSITION CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWF_UUID_COL_ISACTIVE CHARACTER VARYING(32) := fn_get_uuid();
+/*END COLUMNS TABLE ad_field*/
+
 BEGIN
 
 DROP TABLE IF EXISTS ad_org CASCADE;
@@ -325,6 +377,9 @@ ALTER TABLE ad_table OWNER TO admin;
 INSERT INTO ad_table VALUES(_UUID,'0','0','0','ad_user','Usuario','Catalogo de Usuarios','Y','Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_table VALUES(AT_UUID,'0','0','0','ad_table','Tabla','Catalogo de Tablas','Y','Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_table VALUES(AC_UUID,'0','0','0','ad_column','Columna','Catalogo de Columnas','Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_table VALUES(AW_UUID,'0','0','0','ad_window','Window','Catalogo de Ventana','Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_table VALUES(AWT_UUID,'0','0','0','ad_tab','Tab','Catalogo de Pestana','Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_table VALUES(AWF_UUID,'0','0','0','ad_field','Field','Catalogo de Campo','Y','Y',NOW(),'0',NOW(),'0');
 
 DROP TABLE IF EXISTS ad_datatype CASCADE;
 CREATE TABLE ad_datatype(
@@ -443,6 +498,44 @@ INSERT INTO ad_column VALUES(AC_UUID_COL_ISACTIVE,'0','0',AC_UUID,_UUID_YESNO,'i
 INSERT INTO ad_column VALUES(AC_UUID_COL_ICON,'0','0',AC_UUID,_UUID_TEXT,'icon','Icon','Icon',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
 /*AC_COLUMNS*/
 
+/*AW_COLUMNS*/
+INSERT INTO ad_column VALUES(AW_UUID_COL_ID,'0','0',AW_UUID,_UUID_TEXT,'ad_window_id','ID','ID window',NULL,'Y','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AW_UUID_COL_AD_CLIENT_ID,'0','0',AW_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AW_UUID_COL_AD_ORG_ID,'0','0',AW_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AW_UUID_COL_VALUE,'0','0',AW_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AW_UUID_COL_NAME,'0','0',AW_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AW_UUID_COL_DESCRIPTION,'0','0',AW_UUID,_UUID_TEXT,'description','Description','Description',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AW_UUID_COL_ISACTIVE,'0','0',AW_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+/*AW_COLUMNS*/
+
+/*AWT_COLUMNS*/
+INSERT INTO ad_column VALUES(AWT_UUID_COL_ID,'0','0',AWT_UUID,_UUID_TEXT,'ad_tab_id','ID','ID tab',NULL,'Y','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_AD_CLIENT_ID,'0','0',AWT_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_AD_ORG_ID,'0','0',AWT_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_AD_WINDOW_ID,'0','0',AWT_UUID,_UUID_SELECT,'ad_window_id','ID window','ID window',NULL,'N','Y','ad_window','ad_window_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_AD_TAB_PARENT_ID,'0','0',AWT_UUID,_UUID_SELECT,'ad_tab_parent_id','ID tab parent','ID tab_parent',NULL,'N','Y','ad_tab','ad_tab_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_VALUE,'0','0',AWT_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_NAME,'0','0',AWT_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_DESCRIPTION,'0','0',AWT_UUID,_UUID_TEXT,'description','Description','Description',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_POSITION,'0','0',AWT_UUID,_UUID_NUMBER,'position','Position','Position',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_ISACTIVE,'0','0',AWT_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+/*AWT_COLUMNS*/
+
+/*AWF_COLUMNS*/
+--select * from ad_column
+INSERT INTO ad_column VALUES(AWF_UUID_COL_ID,'0','0',AWF_UUID,_UUID_TEXT,'ad_field_id','ID','ID field',NULL,'Y','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_AD_CLIENT_ID,'0','0',AWF_UUID,_UUID_SELECT,'ad_client_id','ID client','ID client',NULL,'N','Y','ad_client','ad_client_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_AD_ORG_ID,'0','0',AWF_UUID,_UUID_SELECT,'ad_org_id','ID org','ID org',NULL,'N','Y','ad_org','ad_org_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_AD_COLUMN_ID,'0','0',AWF_UUID,_UUID_SELECT,'ad_column_id','ID column','ID column',NULL,'N','Y','ad_column','ad_column_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_AD_FIELD_GROUP_ID,'0','0',AWF_UUID,_UUID_SELECT,'ad_field_group_id','ID field group','ID field group',NULL,'N','Y','ad_field_group','ad_field_group_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_AD_TAB_ID,'0','0',AWF_UUID,_UUID_SELECT,'ad_tab_id','ID tab','ID tab',NULL,'N','Y','ad_tab','ad_tab_id','name',NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_VALUE,'0','0',AWF_UUID,_UUID_TEXT,'value','Code','Code',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_NAME,'0','0',AWF_UUID,_UUID_TEXT,'name','Name','Name',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_DESCRIPTION,'0','0',AWF_UUID,_UUID_TEXT,'description','Description','Description',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_POSITION,'0','0',AWF_UUID,_UUID_NUMBER,'position','Position','Position',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWF_UUID_COL_ISACTIVE,'0','0',AWF_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+/*AWF_COLUMNS*/
+
 DROP TABLE IF EXISTS ad_window CASCADE;
 CREATE TABLE ad_window(
 	ad_window_id CHARACTER VARYING(32) NOT NULL,	
@@ -466,7 +559,10 @@ CREATE TABLE ad_window(
 ALTER TABLE ad_window OWNER TO admin;
 INSERT INTO ad_window VALUES(_UUIDW,'0','0','ad_user','Usuario','Catalogo de Usuarios','Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_window VALUES(AT_UUIDW,'0','0','ad_table','Tabla','Catalogo de Tablas','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_window VALUES(AC_UUIDW,'0','0','ad_column','Columna','Catalogo de Columnas','Y',NOW(),'0',NOW(),'0');
+/*INSERT INTO ad_window VALUES(AC_UUIDW,'0','0','ad_column','Columna','Catalogo de Columnas','Y',NOW(),'0',NOW(),'0');*/
+INSERT INTO ad_window VALUES(AW_UUIDW,'0','0','ad_window','Ventana','Catalogo de Ventana','Y',NOW(),'0',NOW(),'0');
+/*INSERT INTO ad_window VALUES(AWT_UUIDW,'0','0','ad_tab','Tab','Catalogo de Pestana','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_window VALUES(AWF_UUIDW,'0','0','ad_field','Field','Catalogo de Campo','Y',NOW(),'0',NOW(),'0');*/
 
 DROP TABLE IF EXISTS ad_menu CASCADE;
 CREATE TABLE ad_menu(
@@ -493,7 +589,10 @@ CREATE TABLE ad_menu(
 INSERT INTO ad_menu VALUES('0','0','0',NULL,NULL,'root','Menu','Menu principal','Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_menu VALUES(_UUIDMNU,'0','0','0',_UUIDW,'ad_user','Usuario','Catalogo de Usuarios','Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_menu VALUES(AT_UUIDMNU,'0','0','0',AT_UUIDW,'ad_table','Tabla','Catalogo de Tablas','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_menu VALUES(AC_UUIDMNU,'0','0','0',AC_UUIDW,'ad_column','Columna','Catalogo de Columnas','Y',NOW(),'0',NOW(),'0');
+--INSERT INTO ad_menu VALUES(AC_UUIDMNU,'0','0','0',AC_UUIDW,'ad_column','Columna','Catalogo de Columnas','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_menu VALUES(AW_UUIDMNU,'0','0','0',AW_UUIDW,'ad_window','Ventana','Catalogo de Ventanas','Y',NOW(),'0',NOW(),'0');
+/*INSERT INTO ad_menu VALUES(AWT_UUIDMNU,'0','0','0',AWT_UUIDW,'ad_tab','Pestana','Catalogo de Pestanas','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_menu VALUES(AWF_UUIDMNU,'0','0','0',AWF_UUIDW,'ad_field','Campo','Catalogo de Campos','Y',NOW(),'0',NOW(),'0');*/
 
 
 DROP TABLE IF EXISTS ad_tab CASCADE;
@@ -523,9 +622,12 @@ CREATE TABLE ad_tab(
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 ALTER TABLE ad_tab OWNER TO admin;
-INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,_UUIDT,'ad_user','Usuario','Datos Generales',0,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,NULL,'ad_user','Usuario','Datos Generales',0,'Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_tab VALUES(AT_UUIDT,'0','0',AT_UUIDW,NULL,'ad_table','Tabla','Datos Tabla',0,'Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_tab VALUES(AC_UUIDT,'0','0',AT_UUIDW,AT_UUIDT,'ad_column','Columna','Datos Columna',0,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AW_UUIDT,'0','0',AW_UUIDW,NULL,'ad_window','Ventana','Datos Ventana',10,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AWT_UUIDT,'0','0',AW_UUIDW,AW_UUIDT,'ad_tab','Pestana','Datos Pestana',20,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AWF_UUIDT,'0','0',AW_UUIDW,AWT_UUIDT,'ad_field','Campo','Datos Campo',20,'Y',NOW(),'0',NOW(),'0');
 
 DROP TABLE IF EXISTS ad_field_group CASCADE;
 CREATE TABLE ad_field_group(
@@ -629,5 +731,42 @@ INSERT INTO ad_field VALUES(AC_UUID_COL_ISFK,'0','0',AC_UUID_COL_ISFK,_UUID_FIEL
 INSERT INTO ad_field VALUES(AC_UUID_COL_ISACTIVE,'0','0',AC_UUID_COL_ISACTIVE,_UUID_FIELD_GROUP_GENERAL,AC_UUIDT,'isactive','IsActive','IsActive',140,'Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_field VALUES(AC_UUID_COL_ICON,'0','0',AC_UUID_COL_ICON,_UUID_FIELD_GROUP_GENERAL,AC_UUIDT,'icon','Icon','Icon',150,'Y',NOW(),'0',NOW(),'0');
 /*END AC FIELD*/
+
+/*AW FIELD*/
+INSERT INTO ad_field VALUES(AW_UUID_COL_ID,'0','0',AW_UUID_COL_ID,_UUID_FIELD_GROUP_GENERAL,AW_UUIDT,'ad_window_id','ID','ID window',10,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AW_UUID_COL_AD_CLIENT_ID,'0','0',AW_UUID_COL_AD_CLIENT_ID,_UUID_FIELD_GROUP_GENERAL,AW_UUIDT,'ad_client_id','ID client','ID client',20,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AW_UUID_COL_AD_ORG_ID,'0','0',AW_UUID_COL_AD_ORG_ID,_UUID_FIELD_GROUP_GENERAL,AW_UUIDT,'ad_org_id','ID org','ID org',30,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AW_UUID_COL_VALUE,'0','0',AW_UUID_COL_VALUE,_UUID_FIELD_GROUP_GENERAL,AW_UUIDT,'value','Code','Code',60,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AW_UUID_COL_NAME,'0','0',AW_UUID_COL_NAME,_UUID_FIELD_GROUP_GENERAL,AW_UUIDT,'name','Name','Name',70,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AW_UUID_COL_DESCRIPTION,'0','0',AW_UUID_COL_DESCRIPTION,_UUID_FIELD_GROUP_GENERAL,AW_UUIDT,'description','Description','Description',80,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AW_UUID_COL_ISACTIVE,'0','0',AW_UUID_COL_ISACTIVE,_UUID_FIELD_GROUP_GENERAL,AW_UUIDT,'isactive','IsActive','IsActive',140,'Y',NOW(),'0',NOW(),'0');
+/*END AW FIELD*/
+
+/*AWT FIELD*/
+INSERT INTO ad_field VALUES(AWT_UUID_COL_ID,'0','0',AWT_UUID_COL_ID,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'ad_tab_id','ID','ID tab',10,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_AD_CLIENT_ID,'0','0',AWT_UUID_COL_AD_CLIENT_ID,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'ad_client_id','ID client','ID client',20,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_AD_ORG_ID,'0','0',AWT_UUID_COL_AD_ORG_ID,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'ad_org_id','ID org','ID org',30,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_AD_WINDOW_ID,'0','0',AWT_UUID_COL_AD_WINDOW_ID,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'ad_window_id','ID window','ID window',40,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_AD_TAB_PARENT_ID,'0','0',AWT_UUID_COL_AD_TAB_PARENT_ID,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'ad_tab_parent_id','ID tab parent','ID tab_parent',50,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_VALUE,'0','0',AWT_UUID_COL_VALUE,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'value','Code','Code',60,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_NAME,'0','0',AWT_UUID_COL_NAME,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'name','Name','Name',70,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_DESCRIPTION,'0','0',AWT_UUID_COL_DESCRIPTION,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'description','Description','Description',80,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_POSITION,'0','0',AWT_UUID_COL_POSITION,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'position','Position','Position',90,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_ISACTIVE,'0','0',AWT_UUID_COL_ISACTIVE,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'isactive','IsActive','IsActive',140,'Y',NOW(),'0',NOW(),'0');
+/*END AWT FIELD*/
+
+/*AWF FIELD*/
+INSERT INTO ad_field VALUES(AWF_UUID_COL_ID,'0','0',AWF_UUID_COL_ID,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'ad_field_id','ID','ID field',10,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_AD_CLIENT_ID,'0','0',AWF_UUID_COL_AD_CLIENT_ID,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'ad_client_id','ID client','ID client',20,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_AD_ORG_ID,'0','0',AWF_UUID_COL_AD_ORG_ID,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'ad_org_id','ID org','ID org',30,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_AD_COLUMN_ID,'0','0',AWF_UUID_COL_AD_COLUMN_ID,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'ad_column_id','ID column','ID column',40,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_AD_FIELD_GROUP_ID,'0','0',AWF_UUID_COL_AD_FIELD_GROUP_ID,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'ad_field_group_id','ID field_group','ID field_group',50,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_AD_TAB_ID,'0','0',AWF_UUID_COL_AD_TAB_ID,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'ad_tab_id','ID tab','ID tab',60,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_VALUE,'0','0',AWF_UUID_COL_VALUE,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'value','Code','Code',70,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_NAME,'0','0',AWF_UUID_COL_NAME,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'name','Name','Name',80,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_DESCRIPTION,'0','0',AWF_UUID_COL_DESCRIPTION,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'description','Description','Description',90,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_POSITION,'0','0',AWF_UUID_COL_POSITION,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'position','Position','Position',100,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWF_UUID_COL_ISACTIVE,'0','0',AWF_UUID_COL_ISACTIVE,_UUID_FIELD_GROUP_GENERAL,AWF_UUIDT,'isactive','IsActive','IsActive',110,'Y',NOW(),'0',NOW(),'0');
+/*END AWF FIELD*/
 
 END $$;
