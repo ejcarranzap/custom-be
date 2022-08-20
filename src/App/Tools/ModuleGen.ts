@@ -65,7 +65,7 @@ class ModuleGen {
         const table_name = table.table_name
         var fn = async function (request, h) {
             const db = app.db
-            var t = await db.sequelize.transaction({ autocommit: false });
+            /*var t = await db.sequelize.transaction({ autocommit: false });*/
             try {
                 var ds
                 let model = db.sequelize.models[table_name];
@@ -76,7 +76,7 @@ class ModuleGen {
                 /*console.log('query: ', request.query)*/
                 ds = await model.findAll({ where: request.query });
 
-                t.commit();
+                /*t.commit();*/
 
                 if (ds)
                     return { success: true, data: ds };
@@ -84,7 +84,7 @@ class ModuleGen {
                     return { success: true, data: [] }
             } catch (e) {
                 console.log(e.stack);
-                t.rollback();
+                /*t.rollback();*/
                 throw new Error(e.message);
             }
         }
@@ -106,7 +106,7 @@ class ModuleGen {
         const table_name = table.table_name
         var fn = async function (request, h) {
             const db = app.db
-            var t = await db.sequelize.transaction({ autocommit: false });
+            /*var t = await db.sequelize.transaction({ autocommit: false });*/
             try {
                 var ds
                 let model = db.sequelize.models[table_name];
@@ -114,9 +114,9 @@ class ModuleGen {
                 var prms = {}
                 prms[modelKey] = request.params.id
                 /*console.log('params: ', prms)*/
-                ds = await model.findOne({ transaction: t, where: prms });
+                ds = await model.findOne({ /*transaction: t,*/ where: prms });
 
-                t.commit();
+                /*t.commit();*/
 
                 if (ds)
                     return { success: true, data: ds.dataValues };
@@ -124,7 +124,7 @@ class ModuleGen {
                     return { success: true, data: {} }
             } catch (e) {
                 console.log(e.stack);
-                t.rollback();
+                /*t.rollback();*/
                 throw new Error(e.message);
             }
         }
@@ -146,16 +146,16 @@ class ModuleGen {
         const table_name = table.table_name
         var fn = async function (request, h) {
             const db = app.db
-            var t = await db.sequelize.transaction({ autocommit: false });
+            /*var t = await db.sequelize.transaction({ autocommit: false });*/
             try {
                 var ds
                 let model = db.sequelize.models[table_name];
                 var idata = request.payload
 
                 /*console.log('params: ', prms)*/
-                ds = await model.create(idata, { transaction: t, hooks: true, individualHooks: true });
+                ds = await model.create(idata, { /*transaction: t,*/ hooks: true, individualHooks: true });
 
-                t.commit();
+                /*t.commit();*/
 
                 if (ds)
                     return { success: true, data: ds.dataValues };
@@ -163,7 +163,7 @@ class ModuleGen {
                     return { success: true, data: {} }
             } catch (e) {
                 console.log(e.stack);
-                t.rollback();
+                /*t.rollback();*/
                 throw new Error(e.message);
             }
         }
@@ -185,7 +185,7 @@ class ModuleGen {
         const table_name = table.table_name
         var fn = async function (request, h) {
             const db = app.db
-            var t = await db.sequelize.transaction({ autocommit: false });
+            /*var t = await db.sequelize.transaction({ autocommit: false });*/
             try {
                 var ds
                 let model = db.sequelize.models[table_name];
@@ -202,7 +202,7 @@ class ModuleGen {
                 await model.update(idata, { where: prms })
                 ds = await model.findOne({ where: prms })
 
-                t.commit();
+                /*t.commit();*/
 
                 if (ds)
                     return { success: true, data: ds.dataValues };
@@ -210,7 +210,7 @@ class ModuleGen {
                     return { success: true, data: {} }
             } catch (e) {
                 console.log(e.stack);
-                t.rollback();
+                /*t.rollback();*/
                 throw new Error(e.message);
             }
         }
@@ -232,7 +232,7 @@ class ModuleGen {
         const table_name = table.table_name
         var fn = async function (request, h) {
             const db = app.db
-            var t = await db.sequelize.transaction({ autocommit: false });
+            /*var t = await db.sequelize.transaction({ autocommit: false });*/
             try {
                 var ds
                 let model = db.sequelize.models[table_name];
@@ -244,7 +244,7 @@ class ModuleGen {
                 ds = await model.findOne({ where: prms })
                 await model.destroy({ where: prms });
 
-                t.commit();
+                /*t.commit();*/
 
                 if (ds)
                     return { success: true, data: ds.dataValues };
@@ -252,7 +252,7 @@ class ModuleGen {
                     return { success: true, data: {} }
             } catch (e) {
                 console.log(e.stack);
-                t.rollback();
+                /*t.rollback();*/
                 throw new Error(e.message);
             }
         }
@@ -309,7 +309,7 @@ class ModuleGen {
                 /*console.log(table.table_name, colsSeq);*/
                 app.db.sequelize.define(table.table_name, colsSeq);
                 /*console.log(app.db.sequelize.models[table.table_name]);*/
-                console.log('Model Register: ' + table.table_name);
+                /*console.log('Model Register: ' + table.table_name);*/
             }
 
             for (var table of tables.ref_table) {
@@ -342,8 +342,8 @@ class ModuleGen {
 
                     }
 
-                    if (colConstraint)
-                        console.log('Constraint Register: ' + colConstraint.constraint_name);
+                    /*if (colConstraint)
+                        console.log('Constraint Register: ' + colConstraint.constraint_name);*/
                 }
 
             }

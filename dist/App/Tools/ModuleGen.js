@@ -134,7 +134,7 @@ class ModuleGen {
                     /*console.log(table.table_name, colsSeq);*/
                     app.db.sequelize.define(table.table_name, colsSeq);
                     /*console.log(app.db.sequelize.models[table.table_name]);*/
-                    console.log('Model Register: ' + table.table_name);
+                    /*console.log('Model Register: ' + table.table_name);*/
                 }
                 for (var table of tables.ref_table) {
                     var tabledata = yield this.getDBObjects({ table_name: table.table_name, ref_action: '' });
@@ -159,8 +159,8 @@ class ModuleGen {
                                 foreignKey: colConstraint.references_field
                             });
                         }
-                        if (colConstraint)
-                            console.log('Constraint Register: ' + colConstraint.constraint_name);
+                        /*if (colConstraint)
+                            console.log('Constraint Register: ' + colConstraint.constraint_name);*/
                     }
                 }
                 if (hooksPath)
@@ -186,7 +186,7 @@ class ModuleGen {
         var fn = function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = app.db;
-                var t = yield db.sequelize.transaction({ autocommit: false });
+                /*var t = await db.sequelize.transaction({ autocommit: false });*/
                 try {
                     var ds;
                     let model = db.sequelize.models[table_name];
@@ -196,7 +196,7 @@ class ModuleGen {
                     /*console.log('params: ', prms)*/
                     /*console.log('query: ', request.query)*/
                     ds = yield model.findAll({ where: request.query });
-                    t.commit();
+                    /*t.commit();*/
                     if (ds)
                         return { success: true, data: ds };
                     else
@@ -204,7 +204,7 @@ class ModuleGen {
                 }
                 catch (e) {
                     console.log(e.stack);
-                    t.rollback();
+                    /*t.rollback();*/
                     throw new Error(e.message);
                 }
             });
@@ -224,7 +224,7 @@ class ModuleGen {
         var fn = function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = app.db;
-                var t = yield db.sequelize.transaction({ autocommit: false });
+                /*var t = await db.sequelize.transaction({ autocommit: false });*/
                 try {
                     var ds;
                     let model = db.sequelize.models[table_name];
@@ -232,8 +232,8 @@ class ModuleGen {
                     var prms = {};
                     prms[modelKey] = request.params.id;
                     /*console.log('params: ', prms)*/
-                    ds = yield model.findOne({ transaction: t, where: prms });
-                    t.commit();
+                    ds = yield model.findOne({ /*transaction: t,*/ where: prms });
+                    /*t.commit();*/
                     if (ds)
                         return { success: true, data: ds.dataValues };
                     else
@@ -241,7 +241,7 @@ class ModuleGen {
                 }
                 catch (e) {
                     console.log(e.stack);
-                    t.rollback();
+                    /*t.rollback();*/
                     throw new Error(e.message);
                 }
             });
@@ -261,14 +261,14 @@ class ModuleGen {
         var fn = function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = app.db;
-                var t = yield db.sequelize.transaction({ autocommit: false });
+                /*var t = await db.sequelize.transaction({ autocommit: false });*/
                 try {
                     var ds;
                     let model = db.sequelize.models[table_name];
                     var idata = request.payload;
                     /*console.log('params: ', prms)*/
-                    ds = yield model.create(idata, { transaction: t, hooks: true, individualHooks: true });
-                    t.commit();
+                    ds = yield model.create(idata, { /*transaction: t,*/ hooks: true, individualHooks: true });
+                    /*t.commit();*/
                     if (ds)
                         return { success: true, data: ds.dataValues };
                     else
@@ -276,7 +276,7 @@ class ModuleGen {
                 }
                 catch (e) {
                     console.log(e.stack);
-                    t.rollback();
+                    /*t.rollback();*/
                     throw new Error(e.message);
                 }
             });
@@ -296,7 +296,7 @@ class ModuleGen {
         var fn = function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = app.db;
-                var t = yield db.sequelize.transaction({ autocommit: false });
+                /*var t = await db.sequelize.transaction({ autocommit: false });*/
                 try {
                     var ds;
                     let model = db.sequelize.models[table_name];
@@ -310,7 +310,7 @@ class ModuleGen {
                     /*console.log('idata: ', idata)*/
                     yield model.update(idata, { where: prms });
                     ds = yield model.findOne({ where: prms });
-                    t.commit();
+                    /*t.commit();*/
                     if (ds)
                         return { success: true, data: ds.dataValues };
                     else
@@ -318,7 +318,7 @@ class ModuleGen {
                 }
                 catch (e) {
                     console.log(e.stack);
-                    t.rollback();
+                    /*t.rollback();*/
                     throw new Error(e.message);
                 }
             });
@@ -338,7 +338,7 @@ class ModuleGen {
         var fn = function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = app.db;
-                var t = yield db.sequelize.transaction({ autocommit: false });
+                /*var t = await db.sequelize.transaction({ autocommit: false });*/
                 try {
                     var ds;
                     let model = db.sequelize.models[table_name];
@@ -348,7 +348,7 @@ class ModuleGen {
                     /*console.log('params: ', prms)*/
                     ds = yield model.findOne({ where: prms });
                     yield model.destroy({ where: prms });
-                    t.commit();
+                    /*t.commit();*/
                     if (ds)
                         return { success: true, data: ds.dataValues };
                     else
@@ -356,7 +356,7 @@ class ModuleGen {
                 }
                 catch (e) {
                     console.log(e.stack);
-                    t.rollback();
+                    /*t.rollback();*/
                     throw new Error(e.message);
                 }
             });

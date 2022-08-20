@@ -208,6 +208,7 @@ DECLARE AWT_UUID_COL_NAME CHARACTER VARYING(32) := fn_get_uuid();
 DECLARE AWT_UUID_COL_DESCRIPTION CHARACTER VARYING(32) := fn_get_uuid();
 DECLARE AWT_UUID_COL_POSITION CHARACTER VARYING(32) := fn_get_uuid();
 DECLARE AWT_UUID_COL_ISACTIVE CHARACTER VARYING(32) := fn_get_uuid();
+DECLARE AWT_UUID_COL_BTN_GETFIELD CHARACTER VARYING(32) := fn_get_uuid();
 /*END COLUMNS TABLE ad_tab*/
 
 /*COLUMNS TABLE ad_field*/
@@ -519,6 +520,7 @@ INSERT INTO ad_column VALUES(AWT_UUID_COL_NAME,'0','0',AWT_UUID,_UUID_TEXT,'name
 INSERT INTO ad_column VALUES(AWT_UUID_COL_DESCRIPTION,'0','0',AWT_UUID,_UUID_TEXT,'description','Description','Description',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_column VALUES(AWT_UUID_COL_POSITION,'0','0',AWT_UUID,_UUID_NUMBER,'position','Position','Position',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_column VALUES(AWT_UUID_COL_ISACTIVE,'0','0',AWT_UUID,_UUID_YESNO,'isactive','IsActive','IsActive',NULL,'N','N',NULL,NULL,NULL,NULL,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_column VALUES(AWT_UUID_COL_BTN_GETFIELD,'0','0',AWT_UUID,_UUID_BUTTON,'btn_getfield','Get Fields','Get Fields','getFieldService','N','N',NULL,NULL,NULL,'mdi-timer-sand-complete','Y',NOW(),'0',NOW(),'0');
 /*AWT_COLUMNS*/
 
 /*AWF_COLUMNS*/
@@ -607,6 +609,7 @@ CREATE TABLE ad_tab(
 	description VARCHAR(255) NOT NULL,
 	position INT NOT NULL,
 	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
+	btn_getfield CHARACTER VARYING(1), 
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	createdby CHARACTER VARYING(32) NOT NULL,
 	updated TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -622,12 +625,12 @@ CREATE TABLE ad_tab(
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 ALTER TABLE ad_tab OWNER TO admin;
-INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,NULL,'ad_user','Usuario','Datos Generales',0,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AT_UUIDT,'0','0',AT_UUIDW,NULL,'ad_table','Tabla','Datos Tabla',0,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AC_UUIDT,'0','0',AT_UUIDW,AT_UUIDT,'ad_column','Columna','Datos Columna',0,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AW_UUIDT,'0','0',AW_UUIDW,NULL,'ad_window','Ventana','Datos Ventana',10,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AWT_UUIDT,'0','0',AW_UUIDW,AW_UUIDT,'ad_tab','Pestana','Datos Pestana',20,'Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AWF_UUIDT,'0','0',AW_UUIDW,AWT_UUIDT,'ad_field','Campo','Datos Campo',20,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,NULL,'ad_user','Usuario','Datos Generales',0,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AT_UUIDT,'0','0',AT_UUIDW,NULL,'ad_table','Tabla','Datos Tabla',0,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AC_UUIDT,'0','0',AT_UUIDW,AT_UUIDT,'ad_column','Columna','Datos Columna',0,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AW_UUIDT,'0','0',AW_UUIDW,NULL,'ad_window','Ventana','Datos Ventana',10,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AWT_UUIDT,'0','0',AW_UUIDW,AW_UUIDT,'ad_tab','Pestana','Datos Pestana',20,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AWF_UUIDT,'0','0',AW_UUIDW,AWT_UUIDT,'ad_field','Campo','Datos Campo',20,'Y','Y',NOW(),'0',NOW(),'0');
 
 DROP TABLE IF EXISTS ad_field_group CASCADE;
 CREATE TABLE ad_field_group(
@@ -753,6 +756,7 @@ INSERT INTO ad_field VALUES(AWT_UUID_COL_NAME,'0','0',AWT_UUID_COL_NAME,_UUID_FI
 INSERT INTO ad_field VALUES(AWT_UUID_COL_DESCRIPTION,'0','0',AWT_UUID_COL_DESCRIPTION,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'description','Description','Description',80,'Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_field VALUES(AWT_UUID_COL_POSITION,'0','0',AWT_UUID_COL_POSITION,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'position','Position','Position',90,'Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_field VALUES(AWT_UUID_COL_ISACTIVE,'0','0',AWT_UUID_COL_ISACTIVE,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'isactive','IsActive','IsActive',140,'Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_field VALUES(AWT_UUID_COL_BTN_GETFIELD,'0','0',AWT_UUID_COL_BTN_GETFIELD,_UUID_FIELD_GROUP_GENERAL,AWT_UUIDT,'btn_getfield','Get Fields','Get Fields',150,'Y',NOW(),'0',NOW(),'0');
 /*END AWT FIELD*/
 
 /*AWF FIELD*/
