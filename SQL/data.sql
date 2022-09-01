@@ -585,6 +585,8 @@ CREATE TABLE ad_menu(
 	CONSTRAINT ad_menu_ad_client FOREIGN KEY(ad_client_id) REFERENCES ad_client(ad_client_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT ad_menu_ad_org FOREIGN KEY(ad_org_id) REFERENCES ad_org(ad_org_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT ad_menu_ad_window FOREIGN KEY(ad_window_id) REFERENCES ad_window(ad_window_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
