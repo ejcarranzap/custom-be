@@ -309,7 +309,7 @@ class ModuleGen {
                 /*console.log(table.table_name, colsSeq);*/
                 app.db.sequelize.define(table.table_name, colsSeq);
                 /*console.log(app.db.sequelize.models[table.table_name]);*/
-                /*console.log('Model Register: ' + table.table_name);*/
+                console.log('Model Register: ' + table.table_name);
             }
 
             for (var table of tables.ref_table) {

@@ -20,8 +20,8 @@ BEGIN
 	WHERE 1 = 1
 	AND table_schema = 'public'
 	/*AND table_name = COALESCE(_table_name,table_name)*/
-	/*AND table_name NOT IN('User','ad_user','ad_table','ad_column','ad_window','ad_tab','ad_field')*/
-	AND table_name IN('ad_menu')
+	AND table_name NOT IN('User')
+	/*AND table_name IN('ad_menu')*/
 	ORDER BY table_name;
 	record_cur RECORD;
 
@@ -46,7 +46,7 @@ BEGIN
 				
 				INSERT INTO ad_window VALUES(_UUIDW,'0','0',record_cur.table_name,'Win Name: ' || record_cur.table_name,'Win Description: ' || record_cur.table_name,'Y',NOW(),'0',NOW(),'0');
 				INSERT INTO ad_menu VALUES(_UUIDM,'0','0','0',_UUIDW,record_cur.table_name,'Menu' || record_cur.table_name,'Menu Description: ' || record_cur.table_name,'Y',NOW(),'0',NOW(),'0');
-				INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,NULL,record_cur.table_name,'Tab: ' || record_cur.table_name,'Tab Description: ' || record_cur.table_name,0,'Y','Y',NOW(),'0',NOW(),'0');
+				INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,NULL,record_cur.table_name,'Tab: ' || record_cur.table_name,'Tab Description: ' || record_cur.table_name,10,'Y','Y',NOW(),'0',NOW(),'0');
 				PERFORM fn_generate_field(_UUIDT,'GETFIELD');
 			END;
 			END IF;

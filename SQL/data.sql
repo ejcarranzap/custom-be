@@ -629,12 +629,12 @@ CREATE TABLE ad_tab(
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 ALTER TABLE ad_tab OWNER TO admin;
-INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,NULL,'ad_user','Usuario','Datos Generales',0,'Y','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AT_UUIDT,'0','0',AT_UUIDW,NULL,'ad_table','Tabla','Datos Tabla',0,'Y','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AC_UUIDT,'0','0',AT_UUIDW,AT_UUIDT,'ad_column','Columna','Datos Columna',0,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,NULL,'ad_user','Usuario','Datos Generales',10,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AT_UUIDT,'0','0',AT_UUIDW,NULL,'ad_table','Tabla','Datos Tabla',10,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AC_UUIDT,'0','0',AT_UUIDW,AT_UUIDT,'ad_column','Columna','Datos Columna',20,'Y','Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_tab VALUES(AW_UUIDT,'0','0',AW_UUIDW,NULL,'ad_window','Ventana','Datos Ventana',10,'Y','Y',NOW(),'0',NOW(),'0');
 INSERT INTO ad_tab VALUES(AWT_UUIDT,'0','0',AW_UUIDW,AW_UUIDT,'ad_tab','Pestana','Datos Pestana',20,'Y','Y',NOW(),'0',NOW(),'0');
-INSERT INTO ad_tab VALUES(AWF_UUIDT,'0','0',AW_UUIDW,AWT_UUIDT,'ad_field','Campo','Datos Campo',20,'Y','Y',NOW(),'0',NOW(),'0');
+INSERT INTO ad_tab VALUES(AWF_UUIDT,'0','0',AW_UUIDW,AWT_UUIDT,'ad_field','Campo','Datos Campo',30,'Y','Y',NOW(),'0',NOW(),'0');
 
 DROP TABLE IF EXISTS ad_field_group CASCADE;
 CREATE TABLE ad_field_group(
