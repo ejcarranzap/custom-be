@@ -97,6 +97,8 @@ class WindowGen {
                 field.id = o.ad_field_id;
                 field.order = o.position;
                 field.group = group;
+                field.display_logic = o.display_logic;
+                field.readonly_logic = o.readonly_logic;
                 yield me.getColumn(field, o);
                 field.default = null;
                 field.visible = true;
@@ -183,6 +185,9 @@ class WindowGen {
                     break;
                 case 'BUTTON':
                     type_ = 'action';
+                    break;
+                case 'MEMO':
+                    type_ = 'memo';
                     break;
                 default: type_ = 'text';
             }

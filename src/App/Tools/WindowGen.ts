@@ -86,6 +86,8 @@ class WindowGen {
             field.id = o.ad_field_id
             field.order = o.position
             field.group = group
+            field.display_logic = o.display_logic
+            field.readonly_logic = o.readonly_logic
 
             await me.getColumn(field, o)
 
@@ -156,6 +158,7 @@ class WindowGen {
             case 'DATE': type_ = 'date'; break;
             case 'IMAGE': type_ = 'image'; break;
             case 'BUTTON': type_ = 'action'; break;
+            case 'MEMO': type_ = 'memo'; break;
             default: type_ = 'text'
         }
         return type_
