@@ -99,9 +99,11 @@ class WindowGen {
                 field.group = group;
                 field.display_logic = o.display_logic;
                 field.readonly_logic = o.readonly_logic;
+                field.position = o.position;
                 yield me.getColumn(field, o);
                 field.default = null;
                 field.visible = true;
+                field.readonly = false;
                 field.visible_grid = true;
                 tab.fields.push(field);
             }

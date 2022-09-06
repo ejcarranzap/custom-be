@@ -11,6 +11,7 @@ import { ModuleGen } from './Tools/ModuleGen';
 import { WindowGen } from './Tools/WindowGen';
 import { MenuGen } from './Tools/MenuGen';
 import { CallProcess } from './Tools/CallProcess';
+import { UploadLink } from './Tools/UploadLink';
 
 class App {
     public sequelize
@@ -22,6 +23,8 @@ class App {
     public menugen
     public callprocess
     public JWT
+    public upload;
+    public imgUrl;
 
     public publicPath: string = ''
     public routesPath: string = ''
@@ -127,6 +130,9 @@ class App {
                     cors: true
                 }
             });
+
+            me.imgUrl = me.server.info.uri + '/Public/files/';
+            me.upload = new UploadLink(me.imgUrl);
 
             await me.server.register([Inert, HapiJWT]);
 

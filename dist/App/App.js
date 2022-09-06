@@ -45,6 +45,7 @@ const ModuleGen_1 = require("./Tools/ModuleGen");
 const WindowGen_1 = require("./Tools/WindowGen");
 const MenuGen_1 = require("./Tools/MenuGen");
 const CallProcess_1 = require("./Tools/CallProcess");
+const UploadLink_1 = require("./Tools/UploadLink");
 class App {
     constructor() {
         this.db = { sequelize: null, types: null, bcrypt: null };
@@ -146,6 +147,8 @@ class App {
                         cors: true
                     }
                 });
+                me.imgUrl = me.server.info.uri + '/Public/files/';
+                me.upload = new UploadLink_1.UploadLink(me.imgUrl);
                 yield me.server.register([Inert, HapiJWT]);
                 yield me.server.route({
                     method: 'GET',
