@@ -74,7 +74,7 @@ module.exports = (app) => {
                     if (!ok) {
                         throw new Error('No se puedo subir el archivo.');
                     }
-                    data.image = app.imgUrl + basename;
+                    data.filename = basename;
                 }
                 return { success: true, mensaje: 'Operación exitosa.', data: data };
             }

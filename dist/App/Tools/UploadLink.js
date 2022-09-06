@@ -42,16 +42,17 @@ class UploadLink {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 var fs = require('fs');
-                const resizeImg = require('resize-img');
-                const image = yield resizeImg(fs.readFileSync(source_file), {
+                /*const resizeImg = require('resize-img');
+                const image = await resizeImg(fs.readFileSync(source_file), {
                     width: 128,
                     height: 128
-                });
+                });*/
+                const image = fs.readFileSync(source_file);
                 fs.unlinkSync(source_file);
                 fs.writeFileSync(source_file, image);
                 var is = fs.createReadStream(source_file);
                 var basename = Path.basename(source_file) + ext;
-                var os = fs.createWriteStream(Path.join(__dirname, '..//..//public//upload//' + basename));
+                var os = fs.createWriteStream(Path.join(__dirname, '../..//..//Public//files//' + basename));
                 yield is.pipe(os);
                 fs.unlinkSync(source_file);
                 return true;
