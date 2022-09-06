@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 module.exports = (app) => {
     const fs = require('fs');
     return {
-        path: '/api/Uploads',
+        path: '/api/Uploads/{file}',
         method: 'GET',
         options: {
             auth: false,
@@ -19,9 +19,9 @@ module.exports = (app) => {
         },
         handler: (request, h) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                var res = request.payload;
+                var res = request.params;
                 console.log('Uploads', res);
-                return h.file('files/ic_user.png', { confine: false });
+                return h.file('files/' + res.file, { confine: false });
             }
             catch (e) {
                 console.log(e.stack);
