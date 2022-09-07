@@ -116,7 +116,7 @@ class App {
             me.processPath = './dist/App/Process';
             me.hooksPath = Path.join(__dirname, './/Hooks');
             me.libsPath = Path.join(__dirname, '..//..//..//libs');
-            me.rptsPath = Path.join(__dirname, '..//..//..//rpts');
+            me.rptsPath = Path.join(__dirname, '..//..//..//rpts//MyReports//');
 
             console.log('public path: ' + me.publicPath);
             console.log('routes path: ' + me.routesPath);

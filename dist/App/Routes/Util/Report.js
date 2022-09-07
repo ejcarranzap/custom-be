@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const FileType = require('file-type');
 module.exports = (app) => {
     const fs = require('fs');
     return {
@@ -20,22 +21,21 @@ module.exports = (app) => {
         handler: (request, h) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 var file_ = 'Report1Psql';
-                var exec = require('child_process').exec, child;
                 var comand = app.report.generateReport(file_, {});
-                child = exec(comand, { cwd: '//home//jonatanc//node-projects//libs//' }, function (error, stdout, stderr) {
-                    try {
-                        //console.log('stdout: ' + stdout);
-                        console.log('stderr: ' + stderr);
-                        if (error !== null) {
-                            console.log('exec error: ' + error);
+                var exec = require('child_process').exec, buffer, mime;
+                console.log(comand);
+                return h.response(yield new Promise(function (resolve, reject) {
+                    exec(comand, { cwd: app.libsPath }, (error, stdout, stderr) => __awaiter(this, void 0, void 0, function* () {
+                        if (error) {
+                            reject(error);
+                            return;
                         }
-                        const buf = Buffer.from(stdout, 'base64');
-                        return buf;
-                    }
-                    catch (e) {
-                        throw new Error(e.message);
-                    }
-                });
+                        buffer = Buffer.from(stdout, 'base64');
+                        /*mime = 'application/pdf'*/
+                        mime = yield FileType.fromBuffer(buffer);
+                        resolve(buffer);
+                    }));
+                })).header('Content-Type', mime.mime).header('Cache-Control', 'no-cache');
             }
             catch (e) {
                 console.log(e.stack);

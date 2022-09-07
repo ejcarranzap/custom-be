@@ -1,4 +1,4 @@
-import * as path from 'path'
+const FileType = require('file-type');
 
 export = (app) => {
     const fs = require('fs')
@@ -13,22 +13,26 @@ export = (app) => {
         handler: async (request, h) => {
             try {
                 var file_ = 'Report1Psql'
-                var exec = require('child_process').exec, child
                 var comand = app.report.generateReport(file_, {})
-                child = exec(comand, { cwd: '//home//jonatanc//node-projects//libs//' },
-                    function (error, stdout, stderr) {
-                        try {
-                            //console.log('stdout: ' + stdout);
-                            console.log('stderr: ' + stderr);
-                            if (error !== null) {
-                                console.log('exec error: ' + error);
-                            }
-                            const buf = Buffer.from(stdout, 'base64');
-                            return buf
-                        } catch (e) {
-                            throw new Error(e.message);
+                var exec = require('child_process').exec, buffer, mime
+
+                console.log(comand)
+
+                return h.response(await new Promise(function(resolve, reject) {
+                    exec(comand, { cwd: app.libsPath },
+                        async (error, stdout, stderr) => {
+                        if (error) {
+                            reject(error);
+                            return;
                         }
+                        
+                        buffer = Buffer.from(stdout, 'base64')
+                        /*mime = 'application/pdf'*/
+                        mime = await FileType.fromBuffer(buffer)
+                        resolve(buffer);
                     });
+                })).header('Content-Type', mime.mime).header('Cache-Control', 'no-cache')
+
             } catch (e) {
                 console.log(e.stack);
                 throw new Error(e.message);
