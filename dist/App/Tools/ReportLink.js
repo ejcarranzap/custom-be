@@ -15,7 +15,6 @@ class ReportLink {
         var currentPath = me.app.rptsPath;
         /*var comand = 'java -jar ./JCReportTool_V3.jar "' + currentPath + '" "' + tempFolder + '" "' + rptName + '" "{}"'*/
         var comand = 'java -jar ./JCReportTool_V3.jar "' + currentPath + '" "' + tempFolder + '" "' + rptName + '" "' + JSON.stringify(rptParams) + '"';
-        console.log(comand);
         return comand;
     }
 }
