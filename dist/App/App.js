@@ -46,6 +46,7 @@ const WindowGen_1 = require("./Tools/WindowGen");
 const MenuGen_1 = require("./Tools/MenuGen");
 const CallProcess_1 = require("./Tools/CallProcess");
 const UploadLink_1 = require("./Tools/UploadLink");
+const ReportLink_1 = require("./Tools/ReportLink");
 class App {
     constructor() {
         this.db = { sequelize: null, types: null, bcrypt: null };
@@ -54,6 +55,8 @@ class App {
         this.routesPath = '';
         this.hooksPath = '';
         this.processPath = '';
+        this.libsPath = '';
+        this.rptsPath = '';
         console.log('App constructor');
         this.init();
     }
@@ -115,6 +118,7 @@ class App {
                 this.wingen = new WindowGen_1.WindowGen(this);
                 this.menugen = new MenuGen_1.MenuGen(this);
                 this.callprocess = new CallProcess_1.CallProcess(this);
+                this.report = new ReportLink_1.ReportLink(this);
                 yield this.startServer();
             }
             catch (e) {
@@ -130,8 +134,12 @@ class App {
                 me.routesPath = './dist/App/Routes';
                 me.processPath = './dist/App/Process';
                 me.hooksPath = Path.join(__dirname, './/Hooks');
+                me.libsPath = Path.join(__dirname, '..//..//..//libs');
+                me.rptsPath = Path.join(__dirname, '..//..//..//rpts');
                 console.log('public path: ' + me.publicPath);
                 console.log('routes path: ' + me.routesPath);
+                console.log('libs path: ' + me.libsPath);
+                console.log('rpts path: ' + me.rptsPath);
                 me.server = new hapi_1.Server({
                     port: 3001,
                     host: 'localhost',

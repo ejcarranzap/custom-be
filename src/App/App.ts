@@ -12,6 +12,7 @@ import { WindowGen } from './Tools/WindowGen';
 import { MenuGen } from './Tools/MenuGen';
 import { CallProcess } from './Tools/CallProcess';
 import { UploadLink } from './Tools/UploadLink';
+import { ReportLink } from './Tools/ReportLink';
 
 class App {
     public sequelize
@@ -25,11 +26,14 @@ class App {
     public JWT
     public upload;
     public imgUrl;
+    public report;
 
     public publicPath: string = ''
     public routesPath: string = ''
     public hooksPath: string = ''
     public processPath: string = ''
+    public libsPath: string = ''
+    public rptsPath: string = ''
 
     constructor() {
         console.log('App constructor')
@@ -96,6 +100,7 @@ class App {
             this.wingen = new WindowGen(this)
             this.menugen = new MenuGen(this)
             this.callprocess = new CallProcess(this)
+            this.report = new ReportLink(this)
 
             await this.startServer()
         } catch (e) {
@@ -110,9 +115,13 @@ class App {
             me.routesPath = './dist/App/Routes';
             me.processPath = './dist/App/Process';
             me.hooksPath = Path.join(__dirname, './/Hooks');
+            me.libsPath = Path.join(__dirname, '..//..//..//libs');
+            me.rptsPath = Path.join(__dirname, '..//..//..//rpts');
 
             console.log('public path: ' + me.publicPath);
             console.log('routes path: ' + me.routesPath);
+            console.log('libs path: ' + me.libsPath);
+            console.log('rpts path: ' + me.rptsPath);
 
 
             me.server = new Server({
