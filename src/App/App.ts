@@ -141,7 +141,7 @@ class App {
             });
 
             me.imgUrl = me.server.info.uri + '/Public/files/';
-            me.upload = new UploadLink(me.imgUrl);
+            me.upload = new UploadLink(me);
 
             await me.server.register([Inert, HapiJWT]);
 

@@ -1,8 +1,8 @@
 import * as Path from 'path';
-class UploadLink {
-    constructor(private path: string) {
+import { App } from '../App';
 
-    }
+class UploadLink {
+    constructor(private app: App) { }
 
     public async upload(source_file, ext) {
         try {
@@ -20,7 +20,7 @@ class UploadLink {
 
             var is = fs.createReadStream(source_file)
             var basename = Path.basename(source_file) + ext;
-            var os = fs.createWriteStream(Path.join(__dirname, '../..//..//Public//files//' + basename));
+            var os = fs.createWriteStream(this.app.publicPath + '/files/' + basename);
             await is.pipe(os);
             fs.unlinkSync(source_file);
             return true;

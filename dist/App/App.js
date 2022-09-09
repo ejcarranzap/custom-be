@@ -156,7 +156,7 @@ class App {
                     }
                 });
                 me.imgUrl = me.server.info.uri + '/Public/files/';
-                me.upload = new UploadLink_1.UploadLink(me.imgUrl);
+                me.upload = new UploadLink_1.UploadLink(me);
                 yield me.server.register([Inert, HapiJWT]);
                 yield me.server.route({
                     method: 'GET',

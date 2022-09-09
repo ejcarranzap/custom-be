@@ -35,8 +35,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadLink = void 0;
 const Path = __importStar(require("path"));
 class UploadLink {
-    constructor(path) {
-        this.path = path;
+    constructor(app) {
+        this.app = app;
     }
     upload(source_file, ext) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -52,7 +52,7 @@ class UploadLink {
                 fs.writeFileSync(source_file, image);
                 var is = fs.createReadStream(source_file);
                 var basename = Path.basename(source_file) + ext;
-                var os = fs.createWriteStream(Path.join(__dirname, '../..//..//Public//files//' + basename));
+                var os = fs.createWriteStream(this.app.publicPath + '/files/' + basename);
                 yield is.pipe(os);
                 fs.unlinkSync(source_file);
                 return true;
