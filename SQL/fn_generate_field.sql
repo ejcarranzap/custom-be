@@ -28,7 +28,7 @@ BEGIN
 		INSERT INTO ad_field
 		SELECT fn_get_uuid() ad_field_id,C.ad_client_id, C.ad_org_id,C.ad_column_id,
 		(SELECT X.ad_field_group_id FROM ad_field_group X WHERE X.ad_org_id = C.ad_org_id AND X.ad_client_id = C.ad_client_id limit 1) ad_field_group_id,
-	 	ad_tab_id,C.value,C.name,C.description,(ROW_NUMBER () OVER ())*10 "position",'Y' isactive,NOW() created,'0' createdby,NOW() updated, '0' updatedby
+	 	ad_tab_id,C.value,C.name,C.description,(ROW_NUMBER () OVER ())*10 "position",'Y' isactive,'' display_logic, '' readonly_logic,NOW() created,'0' createdby,NOW() updated, '0' updatedby
 		FROM ad_tab A
 		INNER JOIN ad_table B ON A.value = B.value 
 		INNER JOIN ad_column C ON B.ad_table_id = C.ad_table_id
