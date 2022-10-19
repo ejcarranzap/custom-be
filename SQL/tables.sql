@@ -1,6 +1,9 @@
 DROP TABLE IF EXISTS m_product;
-CREATE TABLE m_product(
-	m_product_id CHARACTER VARYING(32) NOT NULL,
+DROP TABLE IF EXISTS m_product_category;
+DROP TABLE IF EXISTS c_uom;
+
+CREATE TABLE c_uom(
+	c_uom_id CHARACTER VARYING(32) NOT NULL,
 	ad_org_id CHARACTER VARYING(32) NOT NULL,
 	ad_client_id CHARACTER VARYING(32) NOT NULL,	
 	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
@@ -10,6 +13,56 @@ CREATE TABLE m_product(
 	updatedby CHARACTER VARYING(32) NOT NULL,
 	value CHARACTER VARYING(50) NOT NULL,
 	name CHARACTER VARYING(100) NOT NULL,	
-	CONSTRAINT m_product_key PRIMARY KEY(m_product_id)
-)
+	CONSTRAINT c_uom_key PRIMARY KEY(c_uom_id),
+	CONSTRAINT c_uom_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT c_uom_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE m_product_category(
+	m_product_category_id CHARACTER VARYING(32) NOT NULL,
+	ad_org_id CHARACTER VARYING(32) NOT NULL,
+	ad_client_id CHARACTER VARYING(32) NOT NULL,	
+	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
+	created TIMESTAMP NOT NULL DEFAULT NOW(),
+	createdby CHARACTER VARYING(32) NOT NULL,
+	updated TIMESTAMP NOT NULL DEFAULT NOW(),
+	updatedby CHARACTER VARYING(32) NOT NULL,
+	value CHARACTER VARYING(50) NOT NULL,
+	name CHARACTER VARYING(100) NOT NULL,	
+	CONSTRAINT m_product_category_key PRIMARY KEY(m_product_category_id),
+	CONSTRAINT m_product_category_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT m_product_category_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE m_product(
+	m_product_id CHARACTER VARYING(32) NOT NULL,
+	ad_org_id CHARACTER VARYING(32) NOT NULL,
+	ad_client_id CHARACTER VARYING(32) NOT NULL,
+	m_product_category_id CHARACTER VARYING(32) NOT NULL,
+	c_uom_id CHARACTER VARYING(32) NOT NULL,
+	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
+	created TIMESTAMP NOT NULL DEFAULT NOW(),
+	createdby CHARACTER VARYING(32) NOT NULL,
+	updated TIMESTAMP NOT NULL DEFAULT NOW(),
+	updatedby CHARACTER VARYING(32) NOT NULL,
+	value CHARACTER VARYING(50) NOT NULL,
+	name CHARACTER VARYING(100) NOT NULL,
+	price NUMERIC(19,10),
+	cost NUMERIC(19,10),
+	qty NUMERIC(19,10),
+	image CHARACTER VARYING(255) NOT NULL,
+	CONSTRAINT m_product_key PRIMARY KEY(m_product_id),
+	CONSTRAINT m_product_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT m_product_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT m_product_m_product_category FOREIGN KEY (m_product_category_id) REFERENCES m_product_category (m_product_category_id) 
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT m_product_c_uom FOREIGN KEY (c_uom_id) REFERENCES c_uom (c_uom_id) 
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+);
 

@@ -20,7 +20,7 @@ BEGIN
 	WHERE 1 = 1
 	AND table_schema = 'public'
 	/*AND table_name = COALESCE(_table_name,table_name)*/
-	AND table_name NOT IN('User')
+	AND table_name IN('c_uom')
 	/*AND table_name IN('ad_menu')*/
 	ORDER BY table_name;
 	record_cur RECORD;
@@ -48,7 +48,7 @@ BEGIN
 				INSERT INTO ad_menu VALUES(_UUIDM,'0','0','0',_UUIDW,record_cur.table_name,'Menu' || record_cur.table_name,'Menu Description: ' || record_cur.table_name,'Y',NOW(),'0',NOW(),'0');
 				INSERT INTO ad_tab VALUES(_UUIDT,'0','0',_UUIDW,NULL,record_cur.table_name,'Tab: ' || record_cur.table_name,'Tab Description: ' || record_cur.table_name,10,'Y','Y',NOW(),'0',NOW(),'0');
 				PERFORM fn_generate_field(_UUIDT,'GETFIELD');
-			END;
+			END;			
 			END IF;
 
 		END LOOP;	
