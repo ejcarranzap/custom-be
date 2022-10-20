@@ -20,7 +20,7 @@ BEGIN
 	WHERE 1 = 1
 	AND table_schema = 'public'
 	/*AND table_name = COALESCE(_table_name,table_name)*/
-	AND table_name IN('c_uom')
+	AND table_name IN('fin_paymentmethod')
 	/*AND table_name IN('ad_menu')*/
 	ORDER BY table_name;
 	record_cur RECORD;
