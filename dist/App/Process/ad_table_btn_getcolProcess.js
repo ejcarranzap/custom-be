@@ -16,12 +16,12 @@ class ad_table_btn_getcolProcess {
         this.getDBObjects = (data) => __awaiter(this, void 0, void 0, function* () {
             var app = this.app;
             try {
-                yield app.db.sequelize.query('SELECT fn_generate_column(\'' + data.data.ad_table_id + '\',\'' + data.action.name + '\');', {});
+                yield app.db.sequelize.query('SELECT fn_generate_column2(\'' + data.data.ad_table_id + '\',\'' + data.action.name + '\');', {});
                 return { success: true, data: [] };
             }
             catch (e) {
-                console.log(e.message);
-                throw new Error(e.stack);
+                console.log('Error getDBObjects: ', e.original);
+                throw new Error(e.original);
             }
         });
     }
