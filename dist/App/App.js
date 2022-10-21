@@ -170,7 +170,6 @@ class App {
                 });
                 me.server.ext('onPreResponse', function (request, h) {
                     const response = request.response;
-                    /*console.log(request);*/
                     if (request.response.isBoom) {
                         const err = request.response;
                         const errMsg = (err.output.payload.message + ' ' + err.data);
