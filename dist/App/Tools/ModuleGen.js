@@ -189,7 +189,7 @@ class ModuleGen {
                 /*var t = await db.sequelize.transaction({ autocommit: false });*/
                 try {
                     var ds;
-                    let model = db.sequelize.models[table_name];
+                    let model = app.db.sequelize.models[table_name];
                     var modelKey = model.primaryKeyAttributes[0];
                     var fields = model.rawAttributes;
                     var prms = {};

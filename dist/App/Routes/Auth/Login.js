@@ -15,13 +15,14 @@ module.exports = (app) => {
         config: { auth: false },
         handler: (request, h) => __awaiter(void 0, void 0, void 0, function* () {
             const db = app.db;
-            var t = yield db.sequelize.transaction({ autocommit: false });
+            /*var t = await db.sequelize.transaction({ autocommit: false });*/
             try {
                 console.log('Login');
                 const res = request.payload;
-                var ds;
+                var ds, dsOrg;
                 let model = db.sequelize.models['ad_user'];
-                ds = yield model.findOne({ transaction: t, where: { name: res.name } }).then((record) => {
+                let modelOrg = db.sequelize.models['ad_org'];
+                ds = yield model.findOne({ /*transaction: t,*/ where: { name: res.name } }).then((record) => {
                     if (record && record.validPassword(res.password)) {
                         return record;
                     }
@@ -30,14 +31,24 @@ module.exports = (app) => {
                 if (!ds) {
                     throw new Error("Login failed");
                 }
-                t.commit();
+                /*t.commit()*/
+                dsOrg = yield modelOrg.findOne({ where: { ad_org_id: (res.ad_org_id || '') } });
+                if (!dsOrg) {
+                    throw new Error("Invalid Organization...");
+                }
                 delete ds.dataValues.password;
+                delete ds.dataValues.ad_org_id;
+                delete ds.dataValues.ad_client_id;
+                ds.dataValues.ad_org_id = res.ad_org_id;
+                ds.dataValues.ad_client_id = res.ad_client_id;
+                ds.dataValues.ad_package_id = '0';
+                ds.dataValues.org = dsOrg.dataValues.name;
                 return { success: true, accessToken: app.JWT.sign(ds.dataValues, app.secret), user: ds.dataValues };
             }
             catch (e) {
                 console.log(e.stack);
-                t.rollback();
-                throw new Error(e.message);
+                /*t.rollback();*/
+                throw new Error(e);
             }
         })
     };

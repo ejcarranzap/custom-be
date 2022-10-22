@@ -65,7 +65,7 @@ class WindowGen {
     async getFields(tab) {
         var me = this
         let ds = await me.app.db.sequelize.models['ad_field'].findAll({ where: { ad_tab_id: { [Op.eq]: tab.id } } })
-        
+
         for (var i = 0; i < ds.length; i++) {
             let o = ds[i]
             let dsGroup = await me.app.db.sequelize.models['ad_field_group'].findOne({ where: { ad_field_group_id: o.ad_field_group_id } })
@@ -89,6 +89,7 @@ class WindowGen {
             field.group = group
             field.display_logic = o.display_logic
             field.readonly_logic = o.readonly_logic
+            field.default_value = o.default_value
             field.position = o.position
 
             await me.getColumn(field, o)

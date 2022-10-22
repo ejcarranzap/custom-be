@@ -99,6 +99,7 @@ class WindowGen {
                 field.group = group;
                 field.display_logic = o.display_logic;
                 field.readonly_logic = o.readonly_logic;
+                field.default_value = o.default_value;
                 field.position = o.position;
                 yield me.getColumn(field, o);
                 field.default = null;

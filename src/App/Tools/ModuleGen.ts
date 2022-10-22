@@ -68,7 +68,7 @@ class ModuleGen {
             /*var t = await db.sequelize.transaction({ autocommit: false });*/
             try {
                 var ds
-                let model = db.sequelize.models[table_name];
+                let model = app.db.sequelize.models[table_name];
                 var modelKey = model.primaryKeyAttributes[0];
                 var fields = model.rawAttributes
                 var prms = {}
@@ -77,8 +77,8 @@ class ModuleGen {
                 /*console.log('params: ', prms)*/
                 /*console.log('query: ', request.query)*/
                 /*console.log('fields:', fields.position)*/
-                if(fields.position){
-                    sort.push(['position','ASC'])
+                if (fields.position) {
+                    sort.push(['position', 'ASC'])
                 }
                 ds = await model.findAll({ where: request.query, order: sort });
 
