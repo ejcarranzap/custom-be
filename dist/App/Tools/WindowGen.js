@@ -55,6 +55,8 @@ class WindowGen {
             if (parent)
                 tab.parentkey = parent.key;
             tab.description = o.description;
+            tab.sql_where = o.sql_where;
+            tab.sql_orderby = o.sql_orderby;
             yield me.getTable(tab, o);
             tab.groupkey = null;
             tab.groups = [];

@@ -17,6 +17,15 @@ export = (db) => {
 
     model.beforeUpdate(async (row) => {
         console.log('beforeUpdate c_order');
-        console.log(row.constructor.name);
+        if(row.previous('iscomplete') == 'Y'){
+            throw new Error('El pedido esta completo no se puede modificar.')
+        }
+    });
+
+    model.beforeDestroy(async (row) => {
+        console.log('beforeDestroy c_order');
+        if(row.previous('iscomplete') == 'Y'){
+            throw new Error('El pedido esta completo no se puede modificar.')
+        }
     });
 }

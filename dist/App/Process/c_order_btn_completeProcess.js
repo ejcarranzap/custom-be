@@ -9,18 +9,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ad_table_btn_getcolProcess = void 0;
-class ad_table_btn_getcolProcess {
+exports.c_order_btn_completeProcess = void 0;
+class c_order_btn_completeProcess {
     constructor(app) {
         this.app = app;
-        this.getDBObjects = (data) => __awaiter(this, void 0, void 0, function* () {
+        this.completeOrder = (data) => __awaiter(this, void 0, void 0, function* () {
             var app = this.app;
             try {
-                yield app.db.sequelize.query('SELECT fn_generate_column(\'' + data.data.ad_table_id + '\',\'' + data.action.name + '\');', {});
+                yield app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\');', {});
                 return { success: true, data: [] };
             }
             catch (e) {
-                console.log('Error getDBObjects: ', e.original);
+                console.log('Error completeOrder: ', e.original);
                 throw new Error(e.original);
             }
         });
@@ -28,16 +28,16 @@ class ad_table_btn_getcolProcess {
     run(params) {
         return __awaiter(this, void 0, void 0, function* () {
             /*console.log('ad_table_btn_getcolProcess action called...', params)*/
-            return yield this.generateCols(params);
+            return yield this.complete(params);
         });
     }
-    generateCols(params) {
+    complete(params) {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
-            var ds = yield me.getDBObjects(params);
+            var ds = yield me.completeOrder(params);
             return ds;
         });
     }
 }
-exports.ad_table_btn_getcolProcess = ad_table_btn_getcolProcess;
-//# sourceMappingURL=ad_table_btn_getcolProcess.js.map
+exports.c_order_btn_completeProcess = c_order_btn_completeProcess;
+//# sourceMappingURL=c_order_btn_completeProcess.js.map

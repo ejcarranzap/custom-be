@@ -103,6 +103,9 @@ class App {
                             },
                             beforeBulkUpdate: function (options) {
                                 options.individualHooks = true;
+                            },
+                            beforeBulkDestroy: function (options) {
+                                options.individualHooks = true;
                             }
                         }
                     },

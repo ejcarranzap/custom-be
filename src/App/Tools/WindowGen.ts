@@ -43,6 +43,8 @@ class WindowGen {
         tab.key = modelKey
         if (parent) tab.parentkey = parent.key
         tab.description = o.description
+        tab.sql_where = o.sql_where
+        tab.sql_orderby = o.sql_orderby
         await me.getTable(tab, o)
         tab.groupkey = null
         tab.groups = []

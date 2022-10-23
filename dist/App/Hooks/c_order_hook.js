@@ -21,7 +21,15 @@ module.exports = (db) => {
     }));
     model.beforeUpdate((row) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('beforeUpdate c_order');
-        console.log(row.constructor.name);
+        if (row.previous('iscomplete') == 'Y') {
+            throw new Error('El pedido esta completo no se puede modificar.');
+        }
+    }));
+    model.beforeDestroy((row) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log('beforeDestroy c_order');
+        if (row.previous('iscomplete') == 'Y') {
+            throw new Error('El pedido esta completo no se puede modificar.');
+        }
     }));
 };
 //# sourceMappingURL=c_order_hook.js.map

@@ -141,6 +141,7 @@ CREATE TABLE c_order(
 	total NUMERIC(19,10),
 	comment CHARACTER VARYING(255) NOT NULL,
 	iscomplete CHARACTER VARYING(1) CHECK(iscomplete IN('Y','N')), 
+	btn_complete CHARACTER VARYING(1),
 	CONSTRAINT c_order_key PRIMARY KEY(c_order_id),
 	CONSTRAINT c_order_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,

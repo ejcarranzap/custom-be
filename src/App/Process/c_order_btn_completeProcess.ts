@@ -1,28 +1,28 @@
 import { ValidationError } from "sequelize/types";
 import { App } from "../App";
 
-class ad_table_btn_getcolProcess {
+class c_order_btn_completeProcess {
     constructor(private app: App) { }
     async run(params) {
         /*console.log('ad_table_btn_getcolProcess action called...', params)*/
-        return await this.generateCols(params)
+        return await this.complete(params)
     }
-    async generateCols(params) {
+    async complete(params) {
         var me = this
-        var ds = await me.getDBObjects(params)
+        var ds = await me.completeOrder(params)
         return ds
     }
 
-    getDBObjects = async (data) => {
+    completeOrder = async (data) => {
         var app = this.app;
         try {
-            await app.db.sequelize.query('SELECT fn_generate_column(\'' + data.data.ad_table_id + '\',\'' + data.action.name + '\');', {});
+            await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\');', {});
             return { success: true, data: [] };
         } catch (e) {
-            console.log('Error getDBObjects: ', e.original)
+            console.log('Error completeOrder: ', e.original)
             throw new Error(e.original);
         }
     }
 }
 
-export { ad_table_btn_getcolProcess }
+export { c_order_btn_completeProcess }
