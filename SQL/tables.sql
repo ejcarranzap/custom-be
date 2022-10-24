@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS fin_cashupline;
 DROP TABLE IF EXISTS fin_cashup;
 DROP TABLE IF EXISTS fin_cashupmtype;
 DROP TABLE IF EXISTS c_orderline;
+DROP TABLE IF EXISTS fin_payment_schedule;
 DROP TABLE IF EXISTS c_order;
 DROP TABLE IF EXISTS m_product;
 DROP TABLE IF EXISTS m_product_category;
@@ -180,6 +181,30 @@ CREATE TABLE c_orderline(
 	CONSTRAINT c_orderline_m_product FOREIGN KEY (m_product_id) REFERENCES m_product(m_product_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT c_orderline_c_uom FOREIGN KEY (c_uom_id) REFERENCES c_uom(c_uom_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE fin_payment_schedule(
+	fin_payment_schedule_id CHARACTER VARYING(32) NOT NULL,
+	ad_org_id CHARACTER VARYING(32) NOT NULL,
+	ad_client_id CHARACTER VARYING(32) NOT NULL,	
+	fin_paymentmethod_id CHARACTER VARYING(32) NOT NULL,
+	c_order_id CHARACTER VARYING(32) NOT NULL,
+	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
+	created TIMESTAMP NOT NULL DEFAULT NOW(),
+	createdby CHARACTER VARYING(32) NOT NULL,
+	updated TIMESTAMP NOT NULL DEFAULT NOW(),
+	updatedby CHARACTER VARYING(32) NOT NULL,
+	amount NUMERIC(19,10),
+	outstanding NUMERIC(19,10),
+	CONSTRAINT fin_payment_schedule_key PRIMARY KEY(fin_payment_schedule_id),
+	CONSTRAINT fin_payment_schedule_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT fin_payment_schedule_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT fin_payment_schedule_fin_paymentmethod FOREIGN KEY (fin_paymentmethod_id) REFERENCES fin_paymentmethod(fin_paymentmethod_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT fin_payment_schedule_c_order FOREIGN KEY (c_order_id) REFERENCES c_order(c_order_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 

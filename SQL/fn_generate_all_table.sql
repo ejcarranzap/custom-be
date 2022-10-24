@@ -22,7 +22,7 @@ BEGIN
 	FROM information_schema.tables
 	WHERE 1 = 1
 	AND table_schema = 'public'
-	AND table_name IN('fin_cashup')
+	AND table_name IN('c_order')
 	ORDER BY table_name;
 	record_cur RECORD;
 
