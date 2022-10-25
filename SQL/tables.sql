@@ -289,6 +289,7 @@ CREATE TABLE fin_cashupmtype(
 	updatedby CHARACTER VARYING(32) NOT NULL,	
 	value CHARACTER VARYING(50) NOT NULL,
 	name CHARACTER VARYING(100) NOT NULL,
+	sign CHARACTER VARYING(1) NOT NULL,
 	CONSTRAINT fin_cashupmtype_key PRIMARY KEY(fin_cashupmtype_id),
 	CONSTRAINT fin_cashupmtype_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -306,8 +307,10 @@ CREATE TABLE fin_cashup(
 	updated TIMESTAMP NOT NULL DEFAULT NOW(),
 	updatedby CHARACTER VARYING(32) NOT NULL,
 	cashupdate TIMESTAMP NOT NULL DEFAULT NOW(),	
+	closeddate TIMESTAMP NOT NULL DEFAULT NOW(),	
 	documentno CHARACTER VARYING(32) NOT NULL,
-	series CHARACTER VARYING(32) NOT NULL,	
+	series CHARACTER VARYING(32),	
+	number CHARACTER VARYING(32),	
 	comment CHARACTER VARYING(255) NOT NULL,
 	CONSTRAINT fin_cashup_key PRIMARY KEY(fin_cashup_id),
 	CONSTRAINT fin_cashup_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 

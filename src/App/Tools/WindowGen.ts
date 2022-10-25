@@ -99,7 +99,7 @@ class WindowGen {
             field.default = null
             field.visible = true
             field.readonly = false
-            field.visible_grid = true
+            field.visible_grid = (o.visible_in_grid == 'Y' ? true : false)
 
             tab.fields.push(field)
         }

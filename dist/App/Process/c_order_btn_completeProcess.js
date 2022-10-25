@@ -16,7 +16,7 @@ class c_order_btn_completeProcess {
         this.completeOrder = (data) => __awaiter(this, void 0, void 0, function* () {
             var app = this.app;
             try {
-                yield app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\');', {});
+                yield app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\');', {});
                 return { success: true, data: [] };
             }
             catch (e) {

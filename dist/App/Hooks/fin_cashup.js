@@ -9,30 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 module.exports = (db) => {
-    var model = db.sequelize.models['c_order'];
-    model.prototype.validateIsComplete = function (row) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (row.previous('iscomplete') == 'Y') {
-                throw new Error('El pedido esta completo no se puede modificar.');
-            }
-        });
-    };
+    var model = db.sequelize.models['fin_cashup'];
     model.beforeCreate((row) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log('beforeCreate c_order');
+        console.log('beforeCreate fin_cashup');
         var ds;
         var t = yield db.sequelize.transaction({ autocommit: false });
-        db.sequelize.query('SELECT fn_gen_seq(\'SALE-\',\'' + row.constructor.name + '\',\'documentno\');', { transaction: t });
+        db.sequelize.query('SELECT fn_gen_seq(\'CASH-\',\'' + row.constructor.name + '\',\'documentno\');', { transaction: t });
         var ds = yield db.sequelize.query('FETCH ALL IN "ref_data";', { transaction: t });
         t.commit();
         row.documentno = ds[0][0].seq;
     }));
     model.beforeUpdate((row) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log('beforeUpdate c_order');
-        yield row.validateIsComplete(row);
+        console.log('beforeUpdate fin_cashup');
     }));
     model.beforeDestroy((row) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log('beforeDestroy c_order');
-        yield row.validateIsComplete(row);
+        console.log('beforeDestroy fin_cashup');
     }));
 };
-//# sourceMappingURL=c_order_hook.js.map
+//# sourceMappingURL=fin_cashup.js.map

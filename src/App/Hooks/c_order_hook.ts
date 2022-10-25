@@ -3,6 +3,12 @@
 export = (db) => {
     var model = db.sequelize.models['c_order'];
 
+    model.prototype.validateIsComplete = async function (row) {
+        if (row.previous('iscomplete') == 'Y') {
+            throw new Error('El pedido esta completo no se puede modificar.')
+        }
+    };
+
     model.beforeCreate(async (row) => {
         console.log('beforeCreate c_order');
         var ds;
@@ -17,15 +23,11 @@ export = (db) => {
 
     model.beforeUpdate(async (row) => {
         console.log('beforeUpdate c_order');
-        if(row.previous('iscomplete') == 'Y'){
-            throw new Error('El pedido esta completo no se puede modificar.')
-        }
+        await row.validateIsComplete(row);
     });
 
     model.beforeDestroy(async (row) => {
         console.log('beforeDestroy c_order');
-        if(row.previous('iscomplete') == 'Y'){
-            throw new Error('El pedido esta completo no se puede modificar.')
-        }
+        await row.validateIsComplete(row);
     });
 }

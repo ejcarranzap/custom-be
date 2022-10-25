@@ -15,7 +15,9 @@ module.exports = (app) => {
         config: { auth: false },
         handler: (request, h) => __awaiter(void 0, void 0, void 0, function* () {
             try {
-                const res = request.payload;
+                const jsontoken = app.JWT.decode(request.headers.authorization.split(' ')[1], app.secret);
+                var res = request.payload;
+                res.jsontoken = jsontoken;
                 var data = yield app.callprocess.run(res);
                 return { success: true, data: data, msg: 'ProcessAction' };
             }

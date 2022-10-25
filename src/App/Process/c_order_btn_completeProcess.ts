@@ -16,7 +16,7 @@ class c_order_btn_completeProcess {
     completeOrder = async (data) => {
         var app = this.app;
         try {
-            await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\');', {});
+            await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\');', {});
             return { success: true, data: [] };
         } catch (e) {
             console.log('Error completeOrder: ', e.original)
