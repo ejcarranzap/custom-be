@@ -13,6 +13,7 @@ export = (db) => {
         t.commit();
 
         row.documentno = ds[0][0].seq;
+        row.series = 'CASH'
     });
 
     model.beforeUpdate(async (row) => {

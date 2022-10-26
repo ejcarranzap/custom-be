@@ -18,6 +18,7 @@ module.exports = (db) => {
         var ds = yield db.sequelize.query('FETCH ALL IN "ref_data";', { transaction: t });
         t.commit();
         row.documentno = ds[0][0].seq;
+        row.series = 'CASH';
     }));
     model.beforeUpdate((row) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('beforeUpdate fin_cashup');
