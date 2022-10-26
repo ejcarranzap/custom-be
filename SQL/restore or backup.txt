@@ -1,4 +1,4 @@
 pg_restore -h localhost -p 5432 -U postgres -d old_db -v "/usr/local/backup/10.70.0.61.backup"
 pg_restore -h localhost -p 5432 -U tad -d openbravo
-pg_dump -U admin -h localhost test > /home/backup/test2022OCT241933.backup
-psql -U admin test < test2022OCT241933.backup
+pg_dump -U admin -h localhost test > /home/backup/test2022OCT251933.backup
+psql -U admin test < test2022OCT251933.backup
