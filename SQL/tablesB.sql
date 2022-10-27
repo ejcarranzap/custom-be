@@ -1,3 +1,18 @@
+DROP TABLE IF EXISTS m_inventoryline;
+DROP TABLE IF EXISTS m_inventory;
+DROP TABLE IF EXISTS c_bankmovement;
+DROP TABLE IF EXISTS c_bankstatement;
+DROP TABLE IF EXISTS m_warehouse;
+DROP TABLE IF EXISTS c_location;
+DROP TABLE IF EXISTS m_inventorytype;
+DROP TABLE IF EXISTS c_bankmtype;
+DROP TABLE IF EXISTS c_bankaccount;
+DROP TABLE IF EXISTS c_bank;
+DROP TABLE IF EXISTS fin_expense;
+DROP TABLE IF EXISTS fin_expensetype;
+DROP TABLE IF EXISTS c_currency;
+
+
 CREATE TABLE c_location
 (
     c_location_id CHARACTER VARYING(32) NOT NULL,
@@ -59,11 +74,11 @@ CREATE TABLE m_inventorytype
 );
 
 CREATE TABLE m_inventory(
-	m_inventory CHARACTER VARYING(32) NOT NULL,
+	m_inventory_id CHARACTER VARYING(32) NOT NULL,
 	ad_org_id CHARACTER VARYING(32) NOT NULL,
 	ad_client_id CHARACTER VARYING(32) NOT NULL,
 	m_warehouse_id CHARACTER VARYING(32) NOT NULL,
-	m_inventorytype CHARACTER VARYING(32) NOT NULL,
+	m_inventorytype_id CHARACTER VARYING(32) NOT NULL,
 	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	createdby CHARACTER VARYING(32) NOT NULL,
@@ -105,7 +120,7 @@ CREATE TABLE m_inventoryline(
 	qty NUMERIC(19,10) NOT NULL,
 	cost NUMERIC(19,10) NOT NULL,
 	price NUMERIC(19,10) NOT NULL,	
-	CONSTRAINT m_inventoryline_key PRIMARY KEY(c_orderline_id),
+	CONSTRAINT m_inventoryline_key PRIMARY KEY(m_inventoryline_id),
 	CONSTRAINT m_inventoryline_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT m_inventoryline_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
@@ -205,9 +220,34 @@ CREATE TABLE c_bankaccount
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+CREATE TABLE c_bankstatement
+(
+    c_bankstatement_id CHARACTER VARYING(32) NOT NULL,	
+    ad_org_id CHARACTER VARYING(32) NOT NULL,
+    ad_client_id CHARACTER VARYING(32) NOT NULL,
+	c_bankaccount_id CHARACTER VARYING(32) NOT NULL,
+    isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
+    created TIMESTAMP NOT NULL DEFAULT NOW(),
+    createdby CHARACTER VARYING(32) NOT NULL,
+    updated TIMESTAMP NOT NULL DEFAULT NOW(),
+    updatedby CHARACTER VARYING(32) NOT NULL,
+    value CHARACTER VARYING(50) NOT NULL,
+    name CHARACTER VARYING(100) NOT NULL,
+	balance NUMERIC(19,10) NOT NULL,
+	prevbalance NUMERIC(19,10) NOT NULL,
+    CONSTRAINT c_bankstatement_key PRIMARY KEY(c_bankstatement_id),
+    CONSTRAINT c_bankstatement_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id)
+    MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT c_bankstatement_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT c_bankstatement_c_bankaccount FOREIGN KEY (c_bankaccount_id) REFERENCES c_bankaccount(c_bankaccount_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+
 CREATE TABLE c_bankmovement
 (
-	c_bankmovement CHARACTER VARYING(32) NOT NULL,    
+	c_bankmovement_id CHARACTER VARYING(32) NOT NULL,    
     ad_org_id CHARACTER VARYING(32) NOT NULL,
     ad_client_id CHARACTER VARYING(32) NOT NULL,
 	c_bankaccount_id CHARACTER VARYING(32) NOT NULL,
@@ -234,31 +274,6 @@ CREATE TABLE c_bankmovement
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-CREATE TABLE c_bankstatement
-(
-    c_bankstatement_id CHARACTER VARYING(32) NOT NULL,	
-    ad_org_id CHARACTER VARYING(32) NOT NULL,
-    ad_client_id CHARACTER VARYING(32) NOT NULL,
-	c_bankaccount_id CHARACTER VARYING(32) NOT NULL,
-    isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
-    created TIMESTAMP NOT NULL DEFAULT NOW(),
-    createdby CHARACTER VARYING(32) NOT NULL,
-    updated TIMESTAMP NOT NULL DEFAULT NOW(),
-    updatedby CHARACTER VARYING(32) NOT NULL,
-    value CHARACTER VARYING(50) NOT NULL,
-    name CHARACTER VARYING(100) NOT NULL,
-	balance NUMERIC(19,10) NOT NULL,
-	prevbalance NUMERIC(19,10) NOT NULL,
-    CONSTRAINT c_bankstatement_key PRIMARY KEY(c_bankstatement_id),
-    CONSTRAINT c_bankstatement_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id)
-    MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT c_bankstatement_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
-	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT c_bankstatement_c_bankaccount FOREIGN KEY (c_bankaccount_id) REFERENCES c_bankaccount(c_bankaccount_id)
-	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
-
 CREATE TABLE fin_expensetype
 (
     fin_expensetype_id CHARACTER VARYING(32) NOT NULL,
@@ -280,7 +295,7 @@ CREATE TABLE fin_expensetype
 
 CREATE TABLE fin_expense
 (
-	fin_expense CHARACTER VARYING(32) NOT NULL,    
+	fin_expense_id CHARACTER VARYING(32) NOT NULL,    
     ad_org_id CHARACTER VARYING(32) NOT NULL,
     ad_client_id CHARACTER VARYING(32) NOT NULL,
 	fin_expensetype_id CHARACTER VARYING(32) NOT NULL,
