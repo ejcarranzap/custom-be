@@ -16,17 +16,9 @@ export = (db) => {
 
     model.beforeCreate(async (row) => {
         console.log('beforeCreate');
-        /*row.id = db.uuid();*/
         row.password = row.generateHash(row.password);
-        console.log('password: ' + row.password.toString());
-        row.createdby = row.id;
-        row.updatedby = row.id;
-        if (!row.ad_org_id) row.ad_org_id = '0';
-        if (!row.ad_client_id) row.ad_client_id = '0';
-        if (!row.createdby) row.createdby = '0';
-        if (!row.updatedby) row.updatedby = '0';
+        console.log('password: ' + row.password.toString());                
         var res = await db.sequelize.query('SELECT fn_get_user_code()');
-        /*console.log('value: ', res);*/
         if (!row.value) row.value = res[0][0]['fn_get_user_code'];
 
     });
@@ -34,16 +26,9 @@ export = (db) => {
     model.beforeUpdate((row) => {
         console.log('beforeUpdate');
         var pass = row.generateHash(row.password);
-        var passChanged = row.validPassword(row.password, pass);
-        console.log('beforeUpdate 0');
-        var current = db.sequelize.fn('NOW');
-        console.log('beforeUpdate 1');
-        var previous = row._previousDataValues;
-        console.log('beforeUpdate 2');
+        var passChanged = row.validPassword(row.password, pass);        
         if (passChanged)
-            row.password = pass;
-        row.created = previous.created;
-        row.updated = current;
+            row.password = pass;        
         console.log('endBeforeUpdate');
     });
 

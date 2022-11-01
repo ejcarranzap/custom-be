@@ -83,23 +83,14 @@ class App {
                             beforeCreate: (model, options) => {
                                 /*console.log(model.constructor.name);*/
                                 console.log('created hook');
-                                if (model.constructor.name == 'ad_user') {
-                                    return;
-                                }
                                 var current = this.db.sequelize.fn('NOW');
                                 model.updated = current;
                                 model.created = current;
-                                model.updatedby = '0';
-                                model.createdby = '0';
                             },
                             beforeUpdate: (model, options) => {
                                 console.log('updated hook');
-                                if (model.constructor.name == 'ad_user') {
-                                    return;
-                                }
                                 var current = this.db.sequelize.fn('NOW');
                                 model.updated = current;
-                                model.updatedby = '0';
                             },
                             beforeBulkUpdate: function (options) {
                                 options.individualHooks = true;

@@ -20,21 +20,9 @@ module.exports = (db) => {
     };
     model.beforeCreate((row) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('beforeCreate');
-        /*row.id = db.uuid();*/
         row.password = row.generateHash(row.password);
         console.log('password: ' + row.password.toString());
-        row.createdby = row.id;
-        row.updatedby = row.id;
-        if (!row.ad_org_id)
-            row.ad_org_id = '0';
-        if (!row.ad_client_id)
-            row.ad_client_id = '0';
-        if (!row.createdby)
-            row.createdby = '0';
-        if (!row.updatedby)
-            row.updatedby = '0';
         var res = yield db.sequelize.query('SELECT fn_get_user_code()');
-        /*console.log('value: ', res);*/
         if (!row.value)
             row.value = res[0][0]['fn_get_user_code'];
     }));
@@ -42,15 +30,8 @@ module.exports = (db) => {
         console.log('beforeUpdate');
         var pass = row.generateHash(row.password);
         var passChanged = row.validPassword(row.password, pass);
-        console.log('beforeUpdate 0');
-        var current = db.sequelize.fn('NOW');
-        console.log('beforeUpdate 1');
-        var previous = row._previousDataValues;
-        console.log('beforeUpdate 2');
         if (passChanged)
             row.password = pass;
-        row.created = previous.created;
-        row.updated = current;
         console.log('endBeforeUpdate');
     });
     return model;

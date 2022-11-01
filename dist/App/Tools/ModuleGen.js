@@ -192,15 +192,23 @@ class ModuleGen {
                     let model = app.db.sequelize.models[table_name];
                     var modelKey = model.primaryKeyAttributes[0];
                     var fields = model.rawAttributes;
-                    var prms = {};
                     var sort = [];
+                    var query = request.query;
+                    var sortprm = query.sort;
+                    delete query.sort;
+                    if (sortprm)
+                        sortprm.split(',').map(o => {
+                            var osplit = o.split(":");
+                            sort.push([osplit[0], osplit[1]]);
+                            return o;
+                        });
                     /*prms[modelKey] = request.params.id*/
                     /*console.log('params: ', prms)*/
                     /*console.log('query: ', request.query)*/
                     /*console.log('fields:', fields.position)*/
-                    if (fields.position) {
-                        sort.push(['position', 'ASC']);
-                    }
+                    /*if (fields.position) {
+                        sort.push(['position', 'ASC'])
+                    }*/
                     ds = yield model.findAll({ where: request.query, order: sort });
                     /*t.commit();*/
                     if (ds)
@@ -268,10 +276,16 @@ class ModuleGen {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = app.db;
                 /*var t = await db.sequelize.transaction({ autocommit: false });*/
+                const jsontoken = app.JWT.decode(request.headers.authorization.split(' ')[1], app.secret);
+                console.log('jsontoken', jsontoken);
                 try {
                     var ds;
                     let model = db.sequelize.models[table_name];
                     var idata = request.payload;
+                    delete idata.updated;
+                    delete idata.created;
+                    idata.updatedby = jsontoken.ad_user_id;
+                    idata.createdby = jsontoken.ad_user_id;
                     /*console.log('params: ', prms)*/
                     ds = yield model.create(idata, { /*transaction: t,*/ hooks: true, individualHooks: true });
                     /*t.commit();*/
@@ -303,6 +317,8 @@ class ModuleGen {
             return __awaiter(this, void 0, void 0, function* () {
                 const db = app.db;
                 /*var t = await db.sequelize.transaction({ autocommit: false });*/
+                const jsontoken = app.JWT.decode(request.headers.authorization.split(' ')[1], app.secret);
+                console.log('jsontoken', jsontoken);
                 try {
                     var ds;
                     let model = db.sequelize.models[table_name];
@@ -313,6 +329,7 @@ class ModuleGen {
                     /*console.log('params: ', prms)*/
                     delete idata.updated;
                     delete idata.created;
+                    idata.updated = jsontoken.ad_user_id;
                     /*console.log('idata: ', idata)*/
                     yield model.update(idata, { where: prms });
                     ds = yield model.findOne({ where: prms });

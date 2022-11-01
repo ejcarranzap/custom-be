@@ -52,16 +52,27 @@ CREATE FUNCTION public.fn_complete_order(_c_order_id character varying, _ad_user
     LANGUAGE plpgsql
     AS $$
 DECLARE rcount INT;
+DECLARE order_total NUMERIC(19,10);
+DECLARE payment_total NUMERIC(19,10);
 DECLARE _fin_cashup_id CHARACTER VARYING(32) = '';
 BEGIN
 	/*
 	SELECT fin_cashup_id INTO _fin_cashup_id FROM fin_cashup
 	WHERE iscomplete <> 'Y'
 	*/
+	
+	SELECT SUM(total) INTO order_total FROM c_order WHERE c_order_id = _c_order_id;
+	SELECT SUM(amount) INTO payment_total FROM fin_payment_schedule WHERE c_order_id = _c_order_id;
+	
+	IF(order_total <> payment_total) THEN
+	BEGIN
+		RAISE EXCEPTION 'No se puede completar el pedido venta y pago no coinciden, venta: % pago: %', order_total, payment_total;
+	END;
+	END IF;
 
 	UPDATE c_order SET iscomplete = 'Y' WHERE c_order_id = _c_order_id;
 	
-	RAISE EXCEPTION 'No se puede completar el pedido % del usuario %', _c_order_id, _ad_user_id;
+	RAISE EXCEPTION 'No se puede completar el pedido % del usuario %  venta: % pago: %', _c_order_id, _ad_user_id, order_total, payment_total;
 	
 	
 	RETURN 1;
@@ -589,7 +600,7 @@ CREATE TABLE public.ad_field (
     default_value character varying(255),
     visible_in_grid character varying(1) DEFAULT 'Y'::character varying,
     CONSTRAINT ad_field_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text]))),
-    CONSTRAINT ad_field_visible_in_grid_check CHECK (((visible_in_grid)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT ad_field_visible_in_grid_check CHECK (((visible_in_grid)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -828,7 +839,7 @@ CREATE TABLE public.c_bank (
     value character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
     balance numeric(19,10) NOT NULL,
-    CONSTRAINT c_bank_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT c_bank_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -851,7 +862,7 @@ CREATE TABLE public.c_bankaccount (
     updatedby character varying(32) NOT NULL,
     value character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
-    CONSTRAINT c_bankaccount_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT c_bankaccount_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -876,7 +887,7 @@ CREATE TABLE public.c_bankmovement (
     movementdate timestamp without time zone DEFAULT now() NOT NULL,
     comment character varying(255) NOT NULL,
     amount numeric(19,10) NOT NULL,
-    CONSTRAINT c_bankmovement_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT c_bankmovement_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -897,7 +908,7 @@ CREATE TABLE public.c_bankmtype (
     updatedby character varying(32) NOT NULL,
     value character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
-    CONSTRAINT c_bankmtype_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT c_bankmtype_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -921,7 +932,7 @@ CREATE TABLE public.c_bankstatement (
     name character varying(100) NOT NULL,
     balance numeric(19,10) NOT NULL,
     prevbalance numeric(19,10) NOT NULL,
-    CONSTRAINT c_bankstatement_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT c_bankstatement_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -971,7 +982,7 @@ CREATE TABLE public.c_currency (
     updatedby character varying(32) NOT NULL,
     value character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
-    CONSTRAINT c_currency_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT c_currency_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -992,7 +1003,7 @@ CREATE TABLE public.c_location (
     updatedby character varying(32) NOT NULL,
     value character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
-    CONSTRAINT c_location_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT c_location_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -1171,7 +1182,7 @@ CREATE TABLE public.fin_expense (
     name character varying(100) NOT NULL,
     comment character varying(255) NOT NULL,
     amount numeric(19,10) NOT NULL,
-    CONSTRAINT fin_expense_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT fin_expense_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -1192,7 +1203,7 @@ CREATE TABLE public.fin_expensetype (
     updatedby character varying(32) NOT NULL,
     value character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
-    CONSTRAINT fin_expensetype_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT fin_expensetype_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -1264,8 +1275,8 @@ CREATE TABLE public.m_inventory (
     comment character varying(255) NOT NULL,
     iscomplete character varying(1),
     btn_complete character varying(1),
-    CONSTRAINT m_inventory_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[]))),
-    CONSTRAINT m_inventory_iscomplete_check CHECK (((iscomplete)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT m_inventory_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text]))),
+    CONSTRAINT m_inventory_iscomplete_check CHECK (((iscomplete)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -1293,7 +1304,7 @@ CREATE TABLE public.m_inventoryline (
     qty numeric(19,10) NOT NULL,
     cost numeric(19,10) NOT NULL,
     price numeric(19,10) NOT NULL,
-    CONSTRAINT m_inventoryline_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT m_inventoryline_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -1314,7 +1325,7 @@ CREATE TABLE public.m_inventorytype (
     updatedby character varying(32) NOT NULL,
     value character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
-    CONSTRAINT m_inventorytype_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT m_inventorytype_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -1339,6 +1350,7 @@ CREATE TABLE public.m_movement (
     series character varying(32) NOT NULL,
     comment character varying(255) NOT NULL,
     iscomplete character varying(1),
+    btn_complete character varying(1),
     CONSTRAINT m_movement_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text]))),
     CONSTRAINT m_movement_iscomplete_check CHECK (((iscomplete)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
@@ -1456,7 +1468,7 @@ CREATE TABLE public.m_warehouse (
     updatedby character varying(32) NOT NULL,
     value character varying(50) NOT NULL,
     name character varying(100) NOT NULL,
-    CONSTRAINT m_warehouse_isactive_check CHECK (((isactive)::text = ANY ((ARRAY['Y'::character varying, 'N'::character varying])::text[])))
+    CONSTRAINT m_warehouse_isactive_check CHECK (((isactive)::text = ANY (ARRAY[('Y'::character varying)::text, ('N'::character varying)::text])))
 );
 
 
@@ -1732,6 +1744,27 @@ a47fa6eed02e4ff395fda7a33a7e7291	0	0	3627a5a46dcc47808210bd5eee963472	6e1c09a19f
 1f7c3ca28eda422db1afe860dfc3b10b	0	0	3e57d42df0014eed8a5c234883b20192	65af08108358407b84475b7a34160517	fin_cashup_id	fin_cashup_id	fin_cashup_id		N	Y	fin_cashup	fin_cashup_id	series, documentno	\N	Y	2022-10-19 23:57:56.889155	0	2022-10-25 21:47:20.591067	0
 14062508757c4f24b258fc7c70c0a74d	0	0	cb7de80db72344b8a7f293193cf86f02	6e1c09a19f3845a1a4e8dc74026593d4	visible_in_grid	Visible In Grid	Visible In Grid	\N	N	N	\N	\N	\N	\N	Y	2022-10-27 14:29:00.20436	0	2022-10-27 14:29:00.20436	0
 9f77b3312e964d22858f8385290e8668	0	0	d6d7c3b10789434892b391755b15bd5c	7b5c0fd146584be2ba36295f30fd7b22	movementdate	movementdate	movementdate		N	N	\N	\N	\N	\N	Y	2022-10-19 23:57:35.123844	0	2022-10-27 19:09:43.601193	0
+7132ecf8349842a29515cdc01cba9db0	0	0	d6d7c3b10789434892b391755b15bd5c	6e1c09a19f3845a1a4e8dc74026593d4	iscomplete	iscomplete	iscomplete		N	N	\N	\N	\N	\N	Y	2022-10-27 23:17:21.72591	0	2022-10-27 23:17:21.72591	0
+db82867bbc1b4cea87328c656e5fb00c	0	0	d6d7c3b10789434892b391755b15bd5c	4ca39c91b4274555bc2d23b4a8a70da8	btn_complete	btn_complete	btn_complete		N	N	\N	\N	\N	mdi-check-bold	Y	2022-10-27 23:17:21.72591	0	2022-10-27 23:32:42.882627	0
+70d79b79a6484dd4bb36d7d9395fa7a9	0	0	26ac0fbbd22e49c9b63c56235c02ee68	6ca4658fa4a54419a19a6ceafc4a61a3	m_warehouse_id	m_warehouse_id	m_warehouse_id		Y	N	\N	\N	\N	\N	Y	2022-11-01 16:42:26.855913	0	2022-11-01 16:42:26.855913	0
+91be193016f84eed857448b484b7be52	0	0	26ac0fbbd22e49c9b63c56235c02ee68	65af08108358407b84475b7a34160517	ad_org_id	ad_org_id	ad_org_id		N	Y	ad_org	ad_org_id	name	\N	Y	2022-11-01 16:42:26.855913	0	2022-11-01 16:42:26.855913	0
+67bffc779f544486941e86bda3016ac0	0	0	26ac0fbbd22e49c9b63c56235c02ee68	65af08108358407b84475b7a34160517	ad_client_id	ad_client_id	ad_client_id		N	Y	ad_client	ad_client_id	name	\N	Y	2022-11-01 16:42:26.855913	0	2022-11-01 16:42:26.855913	0
+6ea77d5622fc458e9614399467eb8aac	0	0	26ac0fbbd22e49c9b63c56235c02ee68	65af08108358407b84475b7a34160517	c_location_id	c_location_id	c_location_id		N	Y	c_location	c_location_id	name	\N	Y	2022-11-01 16:42:26.855913	0	2022-11-01 16:42:26.855913	0
+09d75e22b10f4a079222ce7d13b22170	0	0	26ac0fbbd22e49c9b63c56235c02ee68	6e1c09a19f3845a1a4e8dc74026593d4	isactive	isactive	isactive		N	N	\N	\N	\N	\N	Y	2022-11-01 16:42:26.855913	0	2022-11-01 16:42:26.855913	0
+7d7f4cb48b244b338d0561ed908b1415	0	0	26ac0fbbd22e49c9b63c56235c02ee68	6ca4658fa4a54419a19a6ceafc4a61a3	value	value	value		N	N	\N	\N	\N	\N	Y	2022-11-01 16:42:26.855913	0	2022-11-01 16:42:26.855913	0
+1b9390861944479aa3b508bcf1624cca	0	0	26ac0fbbd22e49c9b63c56235c02ee68	6ca4658fa4a54419a19a6ceafc4a61a3	name	name	name		N	N	\N	\N	\N	\N	Y	2022-11-01 16:42:26.855913	0	2022-11-01 16:42:26.855913	0
+e0a618210ec74e99aa11ce8b623d5fde	0	0	00425a74a9c1459dbdff7aafe138bf30	6ca4658fa4a54419a19a6ceafc4a61a3	c_location_id	c_location_id	c_location_id		Y	N	\N	\N	\N	\N	Y	2022-11-01 16:48:11.476508	0	2022-11-01 16:48:11.476508	0
+f4dabecfad174ba4ac8d821cb21970a1	0	0	00425a74a9c1459dbdff7aafe138bf30	65af08108358407b84475b7a34160517	ad_org_id	ad_org_id	ad_org_id		N	Y	ad_org	ad_org_id	name	\N	Y	2022-11-01 16:48:11.476508	0	2022-11-01 16:48:11.476508	0
+df6373aec189402eb2782df53db9805d	0	0	00425a74a9c1459dbdff7aafe138bf30	65af08108358407b84475b7a34160517	ad_client_id	ad_client_id	ad_client_id		N	Y	ad_client	ad_client_id	name	\N	Y	2022-11-01 16:48:11.476508	0	2022-11-01 16:48:11.476508	0
+fe774090166c4ed0be68f023c65b450a	0	0	00425a74a9c1459dbdff7aafe138bf30	6e1c09a19f3845a1a4e8dc74026593d4	isactive	isactive	isactive		N	N	\N	\N	\N	\N	Y	2022-11-01 16:48:11.476508	0	2022-11-01 16:48:11.476508	0
+34ee19ae1d364dd69f5e92aeeaf9c5d1	0	0	00425a74a9c1459dbdff7aafe138bf30	6ca4658fa4a54419a19a6ceafc4a61a3	value	value	value		N	N	\N	\N	\N	\N	Y	2022-11-01 16:48:11.476508	0	2022-11-01 16:48:11.476508	0
+4056680e2a784eada9b71f45ea603df7	0	0	00425a74a9c1459dbdff7aafe138bf30	6ca4658fa4a54419a19a6ceafc4a61a3	name	name	name		N	N	\N	\N	\N	\N	Y	2022-11-01 16:48:11.476508	0	2022-11-01 16:48:11.476508	0
+5ed7ad5aa99140d8982d953a30088336	0	0	93aa31ae53c74d4fbcef5bd7cb96d6e0	6ca4658fa4a54419a19a6ceafc4a61a3	m_inventorytype_id	m_inventorytype_id	m_inventorytype_id		Y	N	\N	\N	\N	\N	Y	2022-11-01 16:57:26.831739	0	2022-11-01 16:57:26.831739	0
+47dbadd579a5421cb48903121a055ce5	0	0	93aa31ae53c74d4fbcef5bd7cb96d6e0	65af08108358407b84475b7a34160517	ad_org_id	ad_org_id	ad_org_id		N	Y	ad_org	ad_org_id	name	\N	Y	2022-11-01 16:57:26.831739	0	2022-11-01 16:57:26.831739	0
+fbb6d18366c543d3b1b84785633b0e4b	0	0	93aa31ae53c74d4fbcef5bd7cb96d6e0	65af08108358407b84475b7a34160517	ad_client_id	ad_client_id	ad_client_id		N	Y	ad_client	ad_client_id	name	\N	Y	2022-11-01 16:57:26.831739	0	2022-11-01 16:57:26.831739	0
+1374f968d2de4c6989c1c4c8785c098f	0	0	93aa31ae53c74d4fbcef5bd7cb96d6e0	6e1c09a19f3845a1a4e8dc74026593d4	isactive	isactive	isactive		N	N	\N	\N	\N	\N	Y	2022-11-01 16:57:26.831739	0	2022-11-01 16:57:26.831739	0
+5ee6227ca45c473c9a916aed0a0ac8d5	0	0	93aa31ae53c74d4fbcef5bd7cb96d6e0	6ca4658fa4a54419a19a6ceafc4a61a3	value	value	value		N	N	\N	\N	\N	\N	Y	2022-11-01 16:57:26.831739	0	2022-11-01 16:57:26.831739	0
+a72f1b71ee6447ce873e2b8d6eefb28d	0	0	93aa31ae53c74d4fbcef5bd7cb96d6e0	6ca4658fa4a54419a19a6ceafc4a61a3	name	name	name		N	N	\N	\N	\N	\N	Y	2022-11-01 16:57:26.831739	0	2022-11-01 16:57:26.831739	0
 \.
 
 
@@ -1767,7 +1800,6 @@ eeb932fd0705426bb0112a5bedc198c3	0	0	eeb932fd0705426bb0112a5bedc198c3	8b2245b92d
 a6c1fa0226824fb6a6835061eba1cd5e	0	0	a6c1fa0226824fb6a6835061eba1cd5e	8b2245b92dec456dae02f9157e9ffdbe	4b9dcfdf4e06409fbf9fa4fe508cb102	first_name	First Name	First Name	90	Y			2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	Y
 5a3fc827419241bda155f08c53b7cb9a	0	0	5a3fc827419241bda155f08c53b7cb9a	8b2245b92dec456dae02f9157e9ffdbe	4b9dcfdf4e06409fbf9fa4fe508cb102	last_name	Last Name	Last Name	100	Y			2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	Y
 ec7d00cf893947a2b05a73e3b0899783	0	0	ec7d00cf893947a2b05a73e3b0899783	8b2245b92dec456dae02f9157e9ffdbe	4b9dcfdf4e06409fbf9fa4fe508cb102	phone_number	Phone Number	Phone Number	110	Y			2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	Y
-e8000627c2304b76bb57d8d362cc2ee6	0	0	e8000627c2304b76bb57d8d362cc2ee6	8b2245b92dec456dae02f9157e9ffdbe	4b9dcfdf4e06409fbf9fa4fe508cb102	birth_date	Birth Date	Birth Date	120	Y			2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	Y
 27487535ca9f4b50952ab967b333f43c	0	0	27487535ca9f4b50952ab967b333f43c	8b2245b92dec456dae02f9157e9ffdbe	4b9dcfdf4e06409fbf9fa4fe508cb102	image	Image	Image	130	Y			2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	Y
 08f9d062cbc94522b8dcfb86cd750da7	0	0	08f9d062cbc94522b8dcfb86cd750da7	8b2245b92dec456dae02f9157e9ffdbe	4b9dcfdf4e06409fbf9fa4fe508cb102	device	Device	Device	140	Y			2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	Y
 82d4f53cedc34ecfb8010ae7b9bdd467	0	0	82d4f53cedc34ecfb8010ae7b9bdd467	8b2245b92dec456dae02f9157e9ffdbe	4b9dcfdf4e06409fbf9fa4fe508cb102	device_model	Device Model	Device Model	150	Y			2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	Y
@@ -2013,6 +2045,29 @@ ccf255e6d4ad40eabdbf2e9ba8b7c877	0	0	c3dfa1d9c646457a97045ee0db4cd1c8	8b2245b92d
 5a47648dd9614b4b850f05e4deee5385	0	0	bbff1635454c4cb2963dde0fab569848	8b2245b92dec456dae02f9157e9ffdbe	fc81b3e9c6bc4cfeb105e74a5bba98a4	m_product_id	m_product_id	m_product_id	60	Y			2022-10-19 23:57:35.123844	0	2022-10-19 23:57:35.123844	0	\N	Y
 e728d6f2da23406682690e478e0501db	0	0	51f599648dfc42ceab895911fcfe25bc	8b2245b92dec456dae02f9157e9ffdbe	fc81b3e9c6bc4cfeb105e74a5bba98a4	price	price	price	80	Y			2022-10-19 23:57:35.123844	0	2022-10-19 23:57:35.123844	0	\N	Y
 33984709aa1c453eaddeca45accf6ae4	0	0	259776f54f004acb8da2c43e272f7383	8b2245b92dec456dae02f9157e9ffdbe	fc81b3e9c6bc4cfeb105e74a5bba98a4	qty	qty	qty	70	Y			2022-10-19 23:57:35.123844	0	2022-10-19 23:57:35.123844	0	\N	Y
+4aeb51d3851743d4b6d00b67cf974520	0	0	7132ecf8349842a29515cdc01cba9db0	8b2245b92dec456dae02f9157e9ffdbe	4a6724ed96fe48ceabdfbdc71898f6fc	iscomplete	iscomplete	iscomplete	20	Y			2022-10-27 23:18:04.559344	0	2022-10-27 23:18:04.559344	0	\N	Y
+249ef681dc9949a79549e961d3448ccb	0	0	14062508757c4f24b258fc7c70c0a74d	8b2245b92dec456dae02f9157e9ffdbe	fe9b0705e9fc47b29cb0e6c5e740025e	visible_in_grid	Visible In Grid	Visible In Grid	10	Y			2022-10-27 23:19:32.093426	0	2022-10-27 23:19:32.093426	0	\N	Y
+00c4e385cffe44778c0fe53d2fc750e2	0	0	db82867bbc1b4cea87328c656e5fb00c	8b2245b92dec456dae02f9157e9ffdbe	4a6724ed96fe48ceabdfbdc71898f6fc	btn_complete	btn_complete	btn_complete	90	Y			2022-10-27 23:18:04.559344	0	2022-10-27 23:20:32.615599	0	\N	Y
+e8000627c2304b76bb57d8d362cc2ee6	0	0	e8000627c2304b76bb57d8d362cc2ee6	8b2245b92dec456dae02f9157e9ffdbe	4b9dcfdf4e06409fbf9fa4fe508cb102	birth_date	Birth Date	Birth Date	120	Y			2022-09-05 18:56:06.726323	0	2022-11-01 16:12:38.524214	0	now()	Y
+452ba9c22c3f4e149bfbf5977c0fd193	0	0	67bffc779f544486941e86bda3016ac0	8b2245b92dec456dae02f9157e9ffdbe	3752af510b6d435d994c4695b659eda1	ad_client_id	ad_client_id	ad_client_id	10	Y			2022-11-01 16:45:07.668518	0	2022-11-01 16:45:07.668518	0	\N	Y
+f38902c9dcfc472684753b9ba2bf4cf8	0	0	91be193016f84eed857448b484b7be52	8b2245b92dec456dae02f9157e9ffdbe	3752af510b6d435d994c4695b659eda1	ad_org_id	ad_org_id	ad_org_id	20	Y			2022-11-01 16:45:07.668518	0	2022-11-01 16:45:07.668518	0	\N	Y
+83c8cb155c424793b47631d944cc2fb3	0	0	6ea77d5622fc458e9614399467eb8aac	8b2245b92dec456dae02f9157e9ffdbe	3752af510b6d435d994c4695b659eda1	c_location_id	c_location_id	c_location_id	30	Y			2022-11-01 16:45:07.668518	0	2022-11-01 16:45:07.668518	0	\N	Y
+20471aa6dc204fb4bfd1c8667a4ed36b	0	0	09d75e22b10f4a079222ce7d13b22170	8b2245b92dec456dae02f9157e9ffdbe	3752af510b6d435d994c4695b659eda1	isactive	isactive	isactive	40	Y			2022-11-01 16:45:07.668518	0	2022-11-01 16:45:07.668518	0	\N	Y
+3ed28c539ea3454faf954d4e71820984	0	0	70d79b79a6484dd4bb36d7d9395fa7a9	8b2245b92dec456dae02f9157e9ffdbe	3752af510b6d435d994c4695b659eda1	m_warehouse_id	m_warehouse_id	m_warehouse_id	50	Y			2022-11-01 16:45:07.668518	0	2022-11-01 16:45:07.668518	0	\N	Y
+bab51d8cfac84bf992d71eb1d4b85e17	0	0	1b9390861944479aa3b508bcf1624cca	8b2245b92dec456dae02f9157e9ffdbe	3752af510b6d435d994c4695b659eda1	name	name	name	60	Y			2022-11-01 16:45:07.668518	0	2022-11-01 16:45:07.668518	0	\N	Y
+4f296989c70249719e10a1c3be4c3a26	0	0	7d7f4cb48b244b338d0561ed908b1415	8b2245b92dec456dae02f9157e9ffdbe	3752af510b6d435d994c4695b659eda1	value	value	value	70	Y			2022-11-01 16:45:07.668518	0	2022-11-01 16:45:07.668518	0	\N	Y
+af015b969e894f35b8c9bc3f61e223d1	0	0	df6373aec189402eb2782df53db9805d	8b2245b92dec456dae02f9157e9ffdbe	5a3ce2dfb2e34c6e9505c6fa84faee73	ad_client_id	ad_client_id	ad_client_id	10	Y			2022-11-01 16:49:23.682897	0	2022-11-01 16:49:23.682897	0	\N	Y
+4a29b073299f4370858ca4f3f3cbb164	0	0	f4dabecfad174ba4ac8d821cb21970a1	8b2245b92dec456dae02f9157e9ffdbe	5a3ce2dfb2e34c6e9505c6fa84faee73	ad_org_id	ad_org_id	ad_org_id	20	Y			2022-11-01 16:49:23.682897	0	2022-11-01 16:49:23.682897	0	\N	Y
+e22366e1c17e494798b2bcd6ca6b5505	0	0	e0a618210ec74e99aa11ce8b623d5fde	8b2245b92dec456dae02f9157e9ffdbe	5a3ce2dfb2e34c6e9505c6fa84faee73	c_location_id	c_location_id	c_location_id	30	Y			2022-11-01 16:49:23.682897	0	2022-11-01 16:49:23.682897	0	\N	Y
+9e3cd661c1764e57a6835a483ca868b8	0	0	fe774090166c4ed0be68f023c65b450a	8b2245b92dec456dae02f9157e9ffdbe	5a3ce2dfb2e34c6e9505c6fa84faee73	isactive	isactive	isactive	40	Y			2022-11-01 16:49:23.682897	0	2022-11-01 16:49:23.682897	0	\N	Y
+d36b5572aaba4461b5576730be7d1144	0	0	4056680e2a784eada9b71f45ea603df7	8b2245b92dec456dae02f9157e9ffdbe	5a3ce2dfb2e34c6e9505c6fa84faee73	name	name	name	50	Y			2022-11-01 16:49:23.682897	0	2022-11-01 16:49:23.682897	0	\N	Y
+77624adfaa2a4ec3a45399f23c04e55d	0	0	34ee19ae1d364dd69f5e92aeeaf9c5d1	8b2245b92dec456dae02f9157e9ffdbe	5a3ce2dfb2e34c6e9505c6fa84faee73	value	value	value	60	Y			2022-11-01 16:49:23.682897	0	2022-11-01 16:49:23.682897	0	\N	Y
+cf27b1d1942c4f2ba6528e64700db7df	0	0	fbb6d18366c543d3b1b84785633b0e4b	8b2245b92dec456dae02f9157e9ffdbe	b3fcf46dca134536864cc49bb99f3fef	ad_client_id	ad_client_id	ad_client_id	10	Y			2022-11-01 16:58:48.76279	0	2022-11-01 16:58:48.76279	0	\N	Y
+2ef096a388434fd7aba2669910036276	0	0	47dbadd579a5421cb48903121a055ce5	8b2245b92dec456dae02f9157e9ffdbe	b3fcf46dca134536864cc49bb99f3fef	ad_org_id	ad_org_id	ad_org_id	20	Y			2022-11-01 16:58:48.76279	0	2022-11-01 16:58:48.76279	0	\N	Y
+4b4e1b4dde2942f58691825ed140231c	0	0	1374f968d2de4c6989c1c4c8785c098f	8b2245b92dec456dae02f9157e9ffdbe	b3fcf46dca134536864cc49bb99f3fef	isactive	isactive	isactive	30	Y			2022-11-01 16:58:48.76279	0	2022-11-01 16:58:48.76279	0	\N	Y
+ae46fd3be0894b738f9a1e8fbef6766f	0	0	5ed7ad5aa99140d8982d953a30088336	8b2245b92dec456dae02f9157e9ffdbe	b3fcf46dca134536864cc49bb99f3fef	m_inventorytype_id	m_inventorytype_id	m_inventorytype_id	40	Y			2022-11-01 16:58:48.76279	0	2022-11-01 16:58:48.76279	0	\N	Y
+95c0415c23104279a67cd0db6e4b0399	0	0	a72f1b71ee6447ce873e2b8d6eefb28d	8b2245b92dec456dae02f9157e9ffdbe	b3fcf46dca134536864cc49bb99f3fef	name	name	name	50	Y			2022-11-01 16:58:48.76279	0	2022-11-01 16:58:48.76279	0	\N	Y
+ac3daf2348904125b13c8b8dd5eefd2c	0	0	5ee6227ca45c473c9a916aed0a0ac8d5	8b2245b92dec456dae02f9157e9ffdbe	b3fcf46dca134536864cc49bb99f3fef	value	value	value	60	Y			2022-11-01 16:58:48.76279	0	2022-11-01 16:58:48.76279	0	\N	Y
 \.
 
 
@@ -2051,6 +2106,9 @@ ddf12ffeedd7489f8ff8e55e5465be70	0	0	0	8dd926626a3a46e287cb973ca2d0cdc4	fin_paym
 49b0ccbc2dad46dd8f9fbd7cd05c0917	0	0	0	bf19c9dfb51448b4b06141eb4ed53ba7	m_movementtype	Menum_movementtype	m_movementtype	Y	2022-10-19 23:57:11.759266	0	2022-10-19 23:57:11.759266	0
 d03c1a114a0e4ad8b753033afc464e8a	0	0	0	4afe4092bd3344428beebc2557048af2	m_movement	Menum_movement	m_movement	Y	2022-10-19 23:57:35.123844	0	2022-10-19 23:57:35.123844	0
 68e4c7b492cd4ebeb2bc3a83d3ad6193	0	0	0	91577ebe6ccd4e87a7d1e87acfd1c0f5	fin_cashup	Menufin_cashup	fin_cashup	Y	2022-10-19 23:57:56.889155	0	2022-10-19 23:57:56.889155	0
+eae9beb96d3847c5902c2360c79aa87d	0	0	\N	24aaa8d95f194613bc55e9c126be7576	m_warehouse	Warehouse	Warehouse	Y	2022-11-01 16:46:18.142905	02f99c48873e430b8b968d96ab9c4a9d	2022-11-01 16:46:18.142905	02f99c48873e430b8b968d96ab9c4a9d
+546163dd674942c9b5e2ae3da11fd3b1	0	0	\N	df4f7b3dc18b45cea526b72157f428ea	c_location	Location	Location	Y	2022-11-01 16:50:04.626875	0	2022-11-01 16:50:04.626875	0
+276e2d01b32e4b4e966c4fb404b8fa36	0	0	\N	16114b503e784203ae23aedeb341ba04	m_inventorytype	Inventory Type	Inventory Type	Y	2022-11-01 16:59:30.220324	0	2022-11-01 16:59:30.220324	0
 \.
 
 
@@ -2086,7 +2144,6 @@ COPY public.ad_package (ad_package_id, ad_client_id, ad_org_id, ad_module_id, va
 --
 
 COPY public.ad_tab (ad_tab_id, ad_client_id, ad_org_id, ad_window_id, ad_tab_parent_id, value, name, description, "position", isactive, btn_getfield, created, createdby, updated, updatedby, sql_where, sql_orderby) FROM stdin;
-4b9dcfdf4e06409fbf9fa4fe508cb102	0	0	1acb589887bd4412a5b0d165c21a2978	\N	ad_user	Usuario	Datos Generales	10	Y	Y	2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	\N
 1e89db4bbf774b0b99b12637e5e84950	0	0	588b343e92504703815b34ea76bc67c0	\N	ad_table	Tabla	Datos Tabla	10	Y	Y	2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	\N
 cd5ae83892a74b018d0803984887c322	0	0	588b343e92504703815b34ea76bc67c0	1e89db4bbf774b0b99b12637e5e84950	ad_column	Columna	Datos Columna	20	Y	Y	2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	\N
 b3327be6a3a24ee196482469a71df291	0	0	35e8c0f91d314ed9965afaa3a9129a64	\N	ad_window	Ventana	Datos Ventana	10	Y	Y	2022-09-05 18:56:06.726323	0	2022-09-05 18:56:06.726323	0	\N	\N
@@ -2111,8 +2168,12 @@ fc81b3e9c6bc4cfeb105e74a5bba98a4	0	0	4afe4092bd3344428beebc2557048af2	4a6724ed96
 3473f31dea96413f85854180ed6b0ea4	0	0	91577ebe6ccd4e87a7d1e87acfd1c0f5	\N	fin_cashup	Tab: fin_cashup	Tab Description: fin_cashup	10	Y	Y	2022-10-19 23:57:56.889155	0	2022-10-19 23:57:56.889155	0	\N	\N
 203bcbdbd73b4fec865b9874473ef5bc	0	0	91577ebe6ccd4e87a7d1e87acfd1c0f5	3473f31dea96413f85854180ed6b0ea4	fin_cashupline	Tab: fin_cashupline	Tab D: fin_cashupline	10	Y	Y	2022-10-19 23:57:56.889155	0	2022-10-19 23:57:56.889155	0	\N	\N
 2889003154bb4b888892bfbd133288cf	0	0	b1ad1dcc17e643f5a33b84275baa4d18	409c022e6ccb4c0eb103ddd3e7dfc335	c_orderline	Tab: c_orderline	Tab D: c_orderline	10	Y	Y	2022-10-19 23:17:16.406347	0	2022-10-22 21:08:26.506616	0		\N
-409c022e6ccb4c0eb103ddd3e7dfc335	0	0	b1ad1dcc17e643f5a33b84275baa4d18	\N	c_order	Tab: c_order	Tab Description: c_order	10	Y	Y	2022-10-19 23:17:16.406347	0	2022-10-22 21:34:09.080164	0	issotrx=Y	\N
 f6b09fc472364d318c2e0bc909653b0b	0	0	b1ad1dcc17e643f5a33b84275baa4d18	409c022e6ccb4c0eb103ddd3e7dfc335	fin_payment_schedule	FinPaymentSchedule	FinPaymentSchedule	160	Y	\N	2022-10-23 20:00:19.409401	0	2022-10-23 20:00:19.409401	0	\N	\N
+409c022e6ccb4c0eb103ddd3e7dfc335	0	0	b1ad1dcc17e643f5a33b84275baa4d18	\N	c_order	Tab: c_order	Tab Description: c_order	10	Y	Y	2022-10-19 23:17:16.406347	0	2022-11-01 14:06:16.573732	0	issotrx=Y	updated:DESC
+4b9dcfdf4e06409fbf9fa4fe508cb102	0	0	1acb589887bd4412a5b0d165c21a2978	\N	ad_user	Usuario	Datos Generales	10	Y	Y	2022-09-05 18:56:06.726323	0	2022-11-01 15:52:18.766148	0	\N	\N
+3752af510b6d435d994c4695b659eda1	0	0	24aaa8d95f194613bc55e9c126be7576	\N	m_warehouse	Warehouse	Warehouse	10	Y	\N	2022-11-01 16:45:00.247577	02f99c48873e430b8b968d96ab9c4a9d	2022-11-01 16:45:00.247577	02f99c48873e430b8b968d96ab9c4a9d	\N	\N
+5a3ce2dfb2e34c6e9505c6fa84faee73	0	0	df4f7b3dc18b45cea526b72157f428ea	\N	c_location	Location	Location	10	Y	\N	2022-11-01 16:49:16.127807	0	2022-11-01 16:49:16.127807	0	\N	\N
+b3fcf46dca134536864cc49bb99f3fef	0	0	16114b503e784203ae23aedeb341ba04	\N	m_inventorytype	Inventory Type	Inventory Type	10	Y	\N	2022-11-01 16:58:40.374759	0	2022-11-01 16:58:40.374759	0	\N	\N
 \.
 
 
@@ -2148,6 +2209,9 @@ b58aa41ef1a1477180baa9415892c39c	0	0	0	m_movementline	Name: m_movementline	Dscri
 547da50a21fa4513abf75476e818ce68	0	0	0	fin_cashup	Name: fin_cashup	Dscription: fin_cashup	Y	Y	2022-10-19 23:57:56.889155	0	2022-10-19 23:57:56.889155	0
 3e57d42df0014eed8a5c234883b20192	0	0	0	fin_cashupline	Name: fin_cashupline	Dscription: fin_cashupline	Y	Y	2022-10-19 23:57:56.889155	0	2022-10-19 23:57:56.889155	0
 3627a5a46dcc47808210bd5eee963472	0	0	0	fin_payment_schedule	FinPaymentSchedule	FinPaymentSchedule	Y	\N	2022-10-23 19:57:06.583938	0	2022-10-23 19:57:06.583938	0
+26ac0fbbd22e49c9b63c56235c02ee68	0	0	0	m_warehouse	Warehouse	Warehouse	Y	\N	2022-11-01 16:42:20.568891	02f99c48873e430b8b968d96ab9c4a9d	2022-11-01 16:42:20.568891	02f99c48873e430b8b968d96ab9c4a9d
+00425a74a9c1459dbdff7aafe138bf30	0	0	0	c_location	Location	Location	Y	\N	2022-11-01 16:43:24.941216	02f99c48873e430b8b968d96ab9c4a9d	2022-11-01 16:43:24.941216	02f99c48873e430b8b968d96ab9c4a9d
+93aa31ae53c74d4fbcef5bd7cb96d6e0	0	0	0	m_inventorytype	Inventory Type	Inventory Type	Y	\N	2022-11-01 16:57:20.735509	0	2022-11-01 16:57:20.735509	0
 \.
 
 
@@ -2157,6 +2221,7 @@ b58aa41ef1a1477180baa9415892c39c	0	0	0	m_movementline	Name: m_movementline	Dscri
 
 COPY public.ad_user (ad_user_id, ad_client_id, ad_org_id, value, name, password, email, first_name, last_name, phone_number, birth_date, image, device, device_model, so, so_version, isactive, created, createdby, updated, updatedby) FROM stdin;
 0	0	0	U00001	admin	$2a$10$ailMVjeYYsDs9YZ3t6ujG.KqbvVDXzaJNZR4Q.KXo8SWyCiSJsqN2	ejcarranzap@gmail.com	Administrador	jon	\N	1985-08-28 00:00:00	1662687732304-317710-7e7da6b1a3930bc3.png	\N	\N	\N	\N	Y	2022-09-05 18:56:06.726323	0	2022-09-09 14:19:12.005422	0
+02f99c48873e430b8b968d96ab9c4a9d	0	0	U000002	jon	$2a$10$zYeJSaUa6iGQMn65dWXk1uSZaeyDDfJok2IEBx7ccvLIWs4wlTgH6	jon@test.com	Jon	Car	00001111	1985-08-28 00:00:00	\N	\N	\N	\N	\N	Y	2022-11-01 16:16:51.293805	0	2022-11-01 16:17:00.38454	0
 \.
 
 
@@ -2185,6 +2250,9 @@ ef5301eeabc44496b03f2a6cae4eba38	0	0	fin_cashupmtype	Win Name: fin_cashupmtype	W
 bf19c9dfb51448b4b06141eb4ed53ba7	0	0	m_movementtype	Win Name: m_movementtype	Win Description: m_movementtype	Y	2022-10-19 23:57:11.759266	0	2022-10-19 23:57:11.759266	0
 4afe4092bd3344428beebc2557048af2	0	0	m_movement	Win Name: m_movement	Win Description: m_movement	Y	2022-10-19 23:57:35.123844	0	2022-10-19 23:57:35.123844	0
 91577ebe6ccd4e87a7d1e87acfd1c0f5	0	0	fin_cashup	Win Name: fin_cashup	Win Description: fin_cashup	Y	2022-10-19 23:57:56.889155	0	2022-10-19 23:57:56.889155	0
+24aaa8d95f194613bc55e9c126be7576	0	0	m_warehouse	Warehouse	Warehouse	Y	2022-11-01 16:44:18.105292	02f99c48873e430b8b968d96ab9c4a9d	2022-11-01 16:44:18.105292	02f99c48873e430b8b968d96ab9c4a9d
+df4f7b3dc18b45cea526b72157f428ea	0	0	c_location	Location	Location	Y	2022-11-01 16:48:36.1265	0	2022-11-01 16:48:36.1265	0
+16114b503e784203ae23aedeb341ba04	0	0	m_inventorytype	Inventory Type	Inventory Type	Y	2022-11-01 16:58:06.366502	0	2022-11-01 16:58:06.366502	0
 \.
 
 
@@ -2250,6 +2318,7 @@ COPY public.c_currency (c_currency_id, ad_org_id, ad_client_id, isactive, create
 --
 
 COPY public.c_location (c_location_id, ad_org_id, ad_client_id, isactive, created, createdby, updated, updatedby, value, name) FROM stdin;
+d813a807cd0a44ab939bb30c6c22fbb2	0	0	Y	2022-11-01 16:50:31.744388	0	2022-11-01 16:51:11.48689	0	L000001	DEFAULT LOCATION
 \.
 
 
@@ -2258,10 +2327,10 @@ COPY public.c_location (c_location_id, ad_org_id, ad_client_id, isactive, create
 --
 
 COPY public.c_order (c_order_id, ad_org_id, ad_client_id, c_bpartner_id, isactive, issotrx, created, createdby, updated, updatedby, dateordered, documentno, number, series, uuid, xml, subtotal, discount, tax, total, comment, iscomplete, btn_complete) FROM stdin;
-f65b4bf20e754928b49d67b2284b7c08	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-10-21 18:51:25.873964	0	2022-10-22 21:56:11.540445	0	2022-01-27 00:00:00	SALE-000001	\N	\N	\N	\N	\N	\N	\N	\N	COMMENT TEST	N	\N
-5dec859000884eaeb4d4a39b006d6901	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-10-22 22:08:11.642431	0	2022-10-22 22:09:50.712956	0	2022-10-22 00:00:00	SALE-000002	\N	\N	\N	\N	\N	\N	\N	\N	comentario	\N	\N
-58839f22fd694271a2921c7677251ad2	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-10-22 22:10:43.748063	0	2022-10-22 22:11:27.195894	0	2022-10-22 00:00:00	SALE-000003	\N	\N	\N	\N	\N	\N	\N	\N	VENTA DE PRUEBA	\N	\N
-c1fa9d297073436babbb5b6062f3c26a	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-10-23 19:39:55.968407	0	2022-10-23 19:39:55.968407	0	2022-10-23 00:00:00	SALE-000004	\N	\N	\N	\N	\N	\N	\N	\N	PRUEBA X	Y	\N
+f65b4bf20e754928b49d67b2284b7c08	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-10-21 18:51:25.873964	0	2022-10-28 19:00:45.063286	0	2022-01-27 00:00:00	SALE-000001	\N	\N	\N	\N	968.0000000000	0.0000000000	132.0000000000	1100.0000000000	COMMENT TEST	N	\N
+58839f22fd694271a2921c7677251ad2	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-10-22 22:10:43.748063	0	2022-10-28 19:10:17.992018	0	2022-10-22 00:00:00	SALE-000003	\N	\N	\N	\N	1320.0000000000	0.0000000000	180.0000000000	1500.0000000000	VENTA DE PRUEBA	N	\N
+5dec859000884eaeb4d4a39b006d6901	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-10-22 22:08:11.642431	0	2022-11-01 14:24:05.361104	0	2022-10-22 00:00:00	SALE-000002	\N	\N	\N	\N	668.8000000000	0.0000000000	91.2000000000	760.0000000000	comentario	N	\N
+c1fa9d297073436babbb5b6062f3c26a	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-10-23 19:39:55.968407	0	2022-11-01 16:27:52.881964	0	2022-10-23 00:00:00	SALE-000004	\N	\N	\N	\N	1223.2000000000	0.0000000000	166.8000000000	1390.0000000000	PRUEBA X	N	\N
 \.
 
 
@@ -2270,9 +2339,14 @@ c1fa9d297073436babbb5b6062f3c26a	0	0	b62b21f0a1664dae8f5027189212684a	Y	Y	2022-1
 --
 
 COPY public.c_orderline (c_orderline_id, c_order_id, ad_org_id, ad_client_id, m_product_id, c_uom_id, isactive, created, createdby, updated, updatedby, qty, cost, price, subtotal, discount, linetax, linetotal) FROM stdin;
-17a31a02885e483cb31f9182b496eb6c	f65b4bf20e754928b49d67b2284b7c08	0	0	4e2ef61e3d9b404cbfdfe8274bef05a2	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-21 18:51:57.453444	0	2022-10-22 21:58:54.564464	0	22.0000000000	30.0000000000	25.0000000000	\N	\N	\N	\N
-b44461d656304c569ef4ad4cfe4211d4	c1fa9d297073436babbb5b6062f3c26a	0	0	4e2ef61e3d9b404cbfdfe8274bef05a2	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-23 19:40:25.244234	0	2022-10-23 19:42:31.084129	0	23.0000000000	30.0000000000	50.0000000000	\N	\N	\N	\N
-016ac88679ae4390bb35ac1c82689272	c1fa9d297073436babbb5b6062f3c26a	0	0	159df8f597e743119d175060c5494f7b	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-23 19:42:17.344838	0	2022-10-23 19:43:04.575471	0	11.0000000000	18.0000000000	20.0000000000	\N	\N	\N	\N
+17a31a02885e483cb31f9182b496eb6c	f65b4bf20e754928b49d67b2284b7c08	0	0	4e2ef61e3d9b404cbfdfe8274bef05a2	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-21 18:51:57.453444	0	2022-10-28 19:00:45.056947	0	22.0000000000	660.0000000000	50.0000000000	968.0000000000	0.0000000000	132.0000000000	1100.0000000000
+343839d40a514a51a563e9cc79eac39e	58839f22fd694271a2921c7677251ad2	0	0	4e2ef61e3d9b404cbfdfe8274bef05a2	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-28 19:02:22.695078	0	2022-10-28 19:10:17.985457	0	30.0000000000	900.0000000000	50.0000000000	1320.0000000000	0.0000000000	180.0000000000	1500.0000000000
+bf90013c5b0f44bb8bf2792b7d2d8ca9	5dec859000884eaeb4d4a39b006d6901	0	0	159df8f597e743119d175060c5494f7b	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-28 19:01:14.018686	0	2022-10-28 19:13:14.007403	0	25.0000000000	450.0000000000	20.0000000000	440.0000000000	0.0000000000	60.0000000000	500.0000000000
+63f9d16feed444f9a0870c22b141064a	5dec859000884eaeb4d4a39b006d6901	0	0	159df8f597e743119d175060c5494f7b	f3287119b97548d3adbbaf3fce58f20b	Y	2022-11-01 13:33:48.08946	0	2022-11-01 13:33:48.08946	0	10.0000000000	180.0000000000	20.0000000000	176.0000000000	0.0000000000	24.0000000000	200.0000000000
+cf803927277345819353c00e5866db31	5dec859000884eaeb4d4a39b006d6901	0	0	159df8f597e743119d175060c5494f7b	f3287119b97548d3adbbaf3fce58f20b	Y	2022-11-01 14:24:05.340171	0	2022-11-01 14:24:05.340171	0	3.0000000000	54.0000000000	20.0000000000	52.8000000000	0.0000000000	7.2000000000	60.0000000000
+016ac88679ae4390bb35ac1c82689272	c1fa9d297073436babbb5b6062f3c26a	0	0	159df8f597e743119d175060c5494f7b	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-23 19:42:17.344838	0	2022-11-01 16:07:35.040619	0	11.0000000000	198.0000000000	20.0000000000	193.6000000000	0.0000000000	26.4000000000	220.0000000000
+b44461d656304c569ef4ad4cfe4211d4	c1fa9d297073436babbb5b6062f3c26a	0	0	4e2ef61e3d9b404cbfdfe8274bef05a2	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-23 19:40:25.244234	0	2022-11-01 16:18:53.23949	0	21.0000000000	630.0000000000	50.0000000000	924.0000000000	0.0000000000	126.0000000000	1050.0000000000
+dab1255c1c5f4289b732a3b9c141ec34	c1fa9d297073436babbb5b6062f3c26a	0	0	159df8f597e743119d175060c5494f7b	f3287119b97548d3adbbaf3fce58f20b	Y	2022-11-01 14:24:22.886024	0	2022-11-01 16:27:52.870922	0	6.0000000000	108.0000000000	20.0000000000	105.6000000000	0.0000000000	14.4000000000	120.0000000000
 \.
 
 
@@ -2336,7 +2410,7 @@ COPY public.fin_expensetype (fin_expensetype_id, ad_org_id, ad_client_id, isacti
 --
 
 COPY public.fin_payment_schedule (fin_payment_schedule_id, ad_org_id, ad_client_id, fin_paymentmethod_id, c_order_id, isactive, created, createdby, updated, updatedby, amount, outstanding) FROM stdin;
-eafcd207dfa44c5facd7074a6ce5d93d	0	0	c63d42f8484548daace2858e5d54cbd9	c1fa9d297073436babbb5b6062f3c26a	Y	2022-10-23 20:02:16.266673	0	2022-10-23 20:02:16.266673	0	100.0000000000	\N
+eafcd207dfa44c5facd7074a6ce5d93d	0	0	c63d42f8484548daace2858e5d54cbd9	c1fa9d297073436babbb5b6062f3c26a	Y	2022-10-23 20:02:16.266673	0	2022-11-01 15:56:04.980386	0	1450.0000000000	\N
 \.
 
 
@@ -2372,6 +2446,8 @@ COPY public.m_inventoryline (m_inventoryline_id, m_inventory_id, ad_org_id, ad_c
 --
 
 COPY public.m_inventorytype (m_inventorytype_id, ad_org_id, ad_client_id, isactive, created, createdby, updated, updatedby, value, name) FROM stdin;
+bda8804b044f4cdfb4506ee5a5a1bd85	0	0	Y	2022-11-01 17:05:43.854525	0	2022-11-01 17:05:43.854525	0	IT000001	IN
+f313c115dae247f1b1fb01a1d7e2fd26	0	0	Y	2022-11-01 17:05:52.62893	0	2022-11-01 17:05:52.62893	0	IT000002	OUT
 \.
 
 
@@ -2379,8 +2455,8 @@ COPY public.m_inventorytype (m_inventorytype_id, ad_org_id, ad_client_id, isacti
 -- Data for Name: m_movement; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public.m_movement (m_movement_id, ad_org_id, ad_client_id, m_movementtype_id, isactive, created, createdby, updated, updatedby, movementdate, documentno, series, comment, iscomplete) FROM stdin;
-083d397ddea2495ea0f4533c1c87aec3	0	0	7164514994e1458ab2fc3c5e8ed53701	Y	2022-10-27 19:12:41.846113	0	2022-10-27 19:12:41.846113	0	2022-10-27 00:00:00	M000001	M	TEST IN	\N
+COPY public.m_movement (m_movement_id, ad_org_id, ad_client_id, m_movementtype_id, isactive, created, createdby, updated, updatedby, movementdate, documentno, series, comment, iscomplete, btn_complete) FROM stdin;
+083d397ddea2495ea0f4533c1c87aec3	0	0	7164514994e1458ab2fc3c5e8ed53701	Y	2022-10-27 19:12:41.846113	0	2022-10-27 19:12:41.846113	0	2022-10-27 00:00:00	M000001	M	TEST IN	\N	\N
 \.
 
 
@@ -2389,6 +2465,7 @@ COPY public.m_movement (m_movement_id, ad_org_id, ad_client_id, m_movementtype_i
 --
 
 COPY public.m_movementline (m_movementline_id, m_movement_id, ad_org_id, ad_client_id, m_product_id, c_uom_id, isactive, created, createdby, updated, updatedby, qty, cost, price) FROM stdin;
+57979642ee7148c38ca17b5a60f60bff	083d397ddea2495ea0f4533c1c87aec3	0	0	4e2ef61e3d9b404cbfdfe8274bef05a2	f3287119b97548d3adbbaf3fce58f20b	Y	2022-10-27 23:03:49.885477	0	2022-10-27 23:03:49.885477	0	10.0000000000	300.0000000000	50.0000000000
 \.
 
 
@@ -2428,6 +2505,7 @@ afa2676b02eb4bcf895aca6aa4bc7ce5	0	0	Y	2022-10-23 19:38:12.952502	0	2022-10-23 1
 --
 
 COPY public.m_warehouse (m_warehouse_id, ad_org_id, ad_client_id, c_location_id, isactive, created, createdby, updated, updatedby, value, name) FROM stdin;
+9e5e72ee023c412d9187adcec855c5e9	0	0	d813a807cd0a44ab939bb30c6c22fbb2	Y	2022-11-01 16:51:01.308083	0	2022-11-01 16:51:01.308083	0	W000001	WAREHOUSE DEFAULT
 \.
 
 
