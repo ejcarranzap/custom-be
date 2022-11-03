@@ -1,0 +1,5 @@
+echo generating backup
+now=`date +%d%b%YT%H%m%s` 
+echo ${now}y
+#psql -U admin -d test -p 5436 -h localhost > "../test${now}.backup"
+echo complete backup
