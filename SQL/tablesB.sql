@@ -73,6 +73,9 @@ CREATE TABLE m_inventorytype
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION	
 );
 
+
+DROP TABLE m_inventoryline;
+DROP TABLE m_inventory;
 CREATE TABLE m_inventory(
 	m_inventory_id CHARACTER VARYING(32) NOT NULL,
 	ad_org_id CHARACTER VARYING(32) NOT NULL,
@@ -91,6 +94,7 @@ CREATE TABLE m_inventory(
 	comment CHARACTER VARYING(255) NOT NULL,
 	iscomplete CHARACTER VARYING(1) CHECK(iscomplete IN('Y','N')), 
 	btn_complete CHARACTER VARYING(1),
+	reference CHARACTER VARYING(32), 
 	CONSTRAINT m_inventory_key PRIMARY KEY(m_inventory_id),
 	CONSTRAINT m_inventory_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id) 
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -111,7 +115,7 @@ CREATE TABLE m_inventoryline(
 	reference CHARACTER VARYING(32) NOT NULL,	
 	c_uom_id CHARACTER VARYING(32) NOT NULL,		
 	c_location_id CHARACTER VARYING(32) NOT NULL,
-	c_locationfrom CHARACTER VARYING(32) NOT NULL,
+	c_locationto CHARACTER VARYING(32) NOT NULL,
 	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	createdby CHARACTER VARYING(32) NOT NULL,
@@ -133,7 +137,7 @@ CREATE TABLE m_inventoryline(
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT m_inventoryline_c_location FOREIGN KEY (c_location_id) REFERENCES c_location(c_location_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
-	CONSTRAINT m_inventoryline_c_locationfrom FOREIGN KEY (c_location_id) REFERENCES c_location(c_location_id)
+	CONSTRAINT m_inventoryline_c_locationto FOREIGN KEY (c_locationto) REFERENCES c_location(c_location_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 

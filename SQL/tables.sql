@@ -226,11 +226,16 @@ CREATE TABLE m_movementtype(
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
+
+DROP TABLE m_movementline;
+DROP TABLE m_movement;
+
 CREATE TABLE m_movement(
 	m_movement_id CHARACTER VARYING(32) NOT NULL,
 	ad_org_id CHARACTER VARYING(32) NOT NULL,
 	ad_client_id CHARACTER VARYING(32) NOT NULL,	
 	m_movementtype_id CHARACTER VARYING(32) NOT NULL,	
+	c_location_id CHARACTER VARYING(32) NOT NULL,	
 	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
 	createdby CHARACTER VARYING(32) NOT NULL,
@@ -247,6 +252,8 @@ CREATE TABLE m_movement(
 	CONSTRAINT m_movement_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT m_movement_m_movementtype FOREIGN KEY (m_movementtype_id) REFERENCES m_movementtype(m_movementtype_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT m_movement_c_location FOREIGN KEY (c_location_id) REFERENCES c_location(c_location_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION	
 );
 
@@ -255,7 +262,9 @@ CREATE TABLE m_movementline(
 	m_movement_id CHARACTER VARYING(32) NOT NULL,
 	ad_org_id CHARACTER VARYING(32) NOT NULL,
 	ad_client_id CHARACTER VARYING(32) NOT NULL,		
-	m_product_id CHARACTER VARYING(32) NOT NULL,		
+	m_product_id CHARACTER VARYING(32) NOT NULL,
+	c_location_id CHARACTER VARYING(32) NOT NULL,
+	c_locationto CHARACTER VARYING(32) NOT NULL,
 	c_uom_id CHARACTER VARYING(32) NOT NULL,		
 	isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
 	created TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -275,6 +284,10 @@ CREATE TABLE m_movementline(
 	CONSTRAINT m_movementline_m_product FOREIGN KEY (m_product_id) REFERENCES m_product(m_product_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT m_movementline_c_uom FOREIGN KEY (c_uom_id) REFERENCES c_uom(c_uom_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT m_movementline_c_location FOREIGN KEY (c_location_id) REFERENCES c_location(c_location_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT m_movementline_c_locationto FOREIGN KEY (c_locationto) REFERENCES c_location(c_location_id)
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 

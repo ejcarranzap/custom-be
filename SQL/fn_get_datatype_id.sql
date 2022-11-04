@@ -114,7 +114,8 @@ BEGIN
 	C.**/
 	FROM xTableP A
 	INNER JOIN xColumn B ON A.table_name = B.table_name
-	LEFT JOIN xConstraint C ON B.table_name = C.table_nameo AND B.column_name = C.column_nameo
+	LEFT JOIN xConstraint C ON B.table_name = C.table_nameo /*AND B.column_name = C.column_nameo*/
+	AND C.constraint_name = (A.table_name || '_' || REPLACE(B.column_name,'_id',''))
 	LEFT JOIN ad_column D ON D.ad_table_id = _ad_table_id AND B.column_name = D.value
 	WHERE D.value IS NULL;
 			
