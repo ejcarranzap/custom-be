@@ -21,7 +21,7 @@ class MenuGen {
             var app = me.app;
             try {
                 var ds, ret = [];
-                ds = yield app.db.sequelize.models['ad_menu'].findAll({ where: { parent: { [Op.eq]: null } } });
+                ds = yield app.db.sequelize.models['ad_menu'].findAll({ where: { parent: { [Op.eq]: null } }, order: [['position', 'ASC']] });
                 ret.push({
                     "id": 1,
                     "description": "Main Title",
@@ -70,7 +70,7 @@ class MenuGen {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
             var app = me.app;
-            var ds = yield app.db.sequelize.models['ad_menu'].findAll({ where: { parent: menu.id } });
+            var ds = yield app.db.sequelize.models['ad_menu'].findAll({ where: { parent: menu.id }, order: [['position', 'ASC']] });
             for (var i = 0; i < ds.length; i++) {
                 let o = ds[i];
                 menu.child.push(yield me.getMenu(o));
