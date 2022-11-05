@@ -1,5 +1,5 @@
 echo drop database
-now=`date +%d%b%Y.backup` 
+now=`date -d "-1 days" +%d%b%Y.backup` 
 name="../Btest$now"
 dropdb -p 5436 -h localhost -U admin -i -e test
 echo create database 

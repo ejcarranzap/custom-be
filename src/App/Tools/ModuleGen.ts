@@ -78,12 +78,12 @@ class ModuleGen {
                 delete query.sort
 
 
-                if(sortprm)
-                sortprm.split(',').map(o => {
-                    var osplit = o.split(":")
-                    sort.push([osplit[0], osplit[1]])
-                    return o
-                })
+                if (sortprm)
+                    sortprm.split(',').map(o => {
+                        var osplit = o.split(":")
+                        sort.push([osplit[0], osplit[1]])
+                        return o
+                    })
                 /*prms[modelKey] = request.params.id*/
                 /*console.log('params: ', prms)*/
                 /*console.log('query: ', request.query)*/
@@ -165,7 +165,7 @@ class ModuleGen {
             const db = app.db
             /*var t = await db.sequelize.transaction({ autocommit: false });*/
             const jsontoken = app.JWT.decode(request.headers.authorization.split(' ')[1], app.secret)
-            console.log('jsontoken', jsontoken)
+            /*console.log('jsontoken', jsontoken)*/
 
             try {
                 var ds
@@ -213,7 +213,7 @@ class ModuleGen {
             const db = app.db
             /*var t = await db.sequelize.transaction({ autocommit: false });*/
             const jsontoken = app.JWT.decode(request.headers.authorization.split(' ')[1], app.secret)
-            console.log('jsontoken', jsontoken)
+            /*console.log('jsontoken', jsontoken)*/
             try {
                 var ds
                 let model = db.sequelize.models[table_name];

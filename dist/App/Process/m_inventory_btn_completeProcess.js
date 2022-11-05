@@ -9,15 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.c_order_btn_completeProcess = void 0;
-class c_order_btn_completeProcess {
+exports.m_inventory_btn_completeProcess = void 0;
+class m_inventory_btn_completeProcess {
     constructor(app) {
         this.app = app;
         this.completeOrder = (data) => __awaiter(this, void 0, void 0, function* () {
             var app = this.app;
             try {
-                console.log(data.data.c_order_id, data.jsontoken.ad_user_id, data.jsontoken.m_warehouse_id);
-                yield app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\',\'' + data.jsontoken.m_warehouse_id + '\');', {});
+                /*await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\');', {});*/
                 return { success: true, data: [] };
             }
             catch (e) {
@@ -40,5 +39,5 @@ class c_order_btn_completeProcess {
         });
     }
 }
-exports.c_order_btn_completeProcess = c_order_btn_completeProcess;
-//# sourceMappingURL=c_order_btn_completeProcess.js.map
+exports.m_inventory_btn_completeProcess = m_inventory_btn_completeProcess;
+//# sourceMappingURL=m_inventory_btn_completeProcess.js.map

@@ -20,7 +20,7 @@ module.exports = (db) => {
                 throw new Error('El pedido esta completo no se puede modificar.');
             }
             row.price = product.price;
-            row.cost = product.cost * row.qty;
+            row.cost = product.cost;
             row.discount = 0.0;
             row.linetotal = product.price * row.qty;
             row.linetax = row.linetotal * 0.12;

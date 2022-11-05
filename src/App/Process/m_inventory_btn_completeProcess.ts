@@ -1,7 +1,6 @@
-import { ValidationError } from "sequelize/types";
 import { App } from "../App";
 
-class c_order_btn_completeProcess {
+class m_inventory_btn_completeProcess {
     constructor(private app: App) { }
     async run(params) {
         /*console.log('ad_table_btn_getcolProcess action called...', params)*/
@@ -16,8 +15,7 @@ class c_order_btn_completeProcess {
     completeOrder = async (data) => {
         var app = this.app;
         try {
-            console.log(data.data.c_order_id, data.jsontoken.ad_user_id, data.jsontoken.m_warehouse_id)
-            await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\',\'' + data.jsontoken.m_warehouse_id + '\');', {});
+            /*await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\');', {});*/
             return { success: true, data: [] };
         } catch (e) {
             console.log('Error completeOrder: ', e.original)
@@ -26,4 +24,4 @@ class c_order_btn_completeProcess {
     }
 }
 
-export { c_order_btn_completeProcess }
+export { m_inventory_btn_completeProcess }

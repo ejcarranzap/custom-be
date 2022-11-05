@@ -35,10 +35,12 @@ export = (app) => {
                 delete ds.dataValues.password;
                 delete ds.dataValues.ad_org_id;
                 delete ds.dataValues.ad_client_id;
+                delete ds.dataValues.m_warehouse_id;
                 ds.dataValues.ad_org_id = res.ad_org_id;
                 ds.dataValues.ad_client_id = res.ad_client_id;
                 ds.dataValues.ad_package_id = '0';
                 ds.dataValues.org = dsOrg.dataValues.name;
+                ds.dataValues.m_warehouse_id = res.m_warehouse_id;
 
                 return { success: true, accessToken: app.JWT.sign(ds.dataValues, app.secret), user: ds.dataValues };
             } catch (e) {

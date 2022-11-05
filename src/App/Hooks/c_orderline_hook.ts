@@ -13,7 +13,7 @@ export = (db) => {
         }
 
         row.price = product.price;
-        row.cost = product.cost * row.qty;
+        row.cost = product.cost;
 
         row.discount = 0.0;
         row.linetotal = product.price * row.qty;
