@@ -13,14 +13,14 @@ exports.m_inventory_btn_completeProcess = void 0;
 class m_inventory_btn_completeProcess {
     constructor(app) {
         this.app = app;
-        this.completeOrder = (data) => __awaiter(this, void 0, void 0, function* () {
+        this.completeInventory = (data) => __awaiter(this, void 0, void 0, function* () {
             var app = this.app;
             try {
-                /*await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\');', {});*/
+                yield app.db.sequelize.query('SELECT fn_complete_inventory(\'' + data.data.m_inventory_id + '\',\'' + data.jsontoken.ad_user_id + '\',\'' + data.jsontoken.m_warehouse_id + '\');', {});
                 return { success: true, data: [] };
             }
             catch (e) {
-                console.log('Error completeOrder: ', e.original);
+                console.log('Error completeInventory: ', e.original);
                 throw new Error(e.original);
             }
         });
@@ -34,7 +34,7 @@ class m_inventory_btn_completeProcess {
     complete(params) {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
-            var ds = yield me.completeOrder(params);
+            var ds = yield me.completeInventory(params);
             return ds;
         });
     }

@@ -14,6 +14,7 @@ BEGIN
 	WHEN _datatype = 'select' THEN _type = 'SELECT';
 	WHEN (_datatype = 'character varying' AND _len = 1) THEN _type = 'YESNO';
 	WHEN (_datatype = 'integer') THEN _type = 'NUMBER';
+	WHEN (_datatype = 'numeric') THEN _type = 'NUMBER';
 	ELSE
 		_type = 'TEXT';
 	END CASE;

@@ -217,9 +217,9 @@ class ModuleGen {
                         return { success: true, data: [] };
                 }
                 catch (e) {
-                    console.log(e.stack);
+                    console.log((e.original || e.stack));
                     /*t.rollback();*/
-                    throw new Error(e.message);
+                    throw new Error((e.original || e.stack));
                 }
             });
         };
@@ -254,9 +254,9 @@ class ModuleGen {
                         return { success: true, data: {} };
                 }
                 catch (e) {
-                    console.log(e.stack);
+                    console.log((e.original || e.stack));
                     /*t.rollback();*/
-                    throw new Error(e.message);
+                    throw new Error((e.original || e.stack));
                 }
             });
         };
@@ -295,9 +295,9 @@ class ModuleGen {
                         return { success: true, data: {} };
                 }
                 catch (e) {
-                    console.log(e.stack);
+                    console.log((e.original || e.stack));
                     /*t.rollback();*/
-                    throw new Error(e.message);
+                    throw new Error((e.original || e.stack));
                 }
             });
         };
@@ -340,9 +340,9 @@ class ModuleGen {
                         return { success: true, data: {} };
                 }
                 catch (e) {
-                    console.log(e.stack);
+                    console.log((e.original || e.stack));
                     /*t.rollback();*/
-                    throw new Error(e.message);
+                    throw new Error((e.original || e.stack));
                 }
             });
         };
@@ -378,9 +378,9 @@ class ModuleGen {
                         return { success: true, data: {} };
                 }
                 catch (e) {
-                    console.log(e.stack);
+                    console.log((e.original || e.stack));
                     /*t.rollback();*/
-                    throw new Error(e.message);
+                    throw new Error((e.original || e.stack));
                 }
             });
         };

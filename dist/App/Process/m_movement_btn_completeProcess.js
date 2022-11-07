@@ -13,14 +13,14 @@ exports.m_movement_btn_completeProcess = void 0;
 class m_movement_btn_completeProcess {
     constructor(app) {
         this.app = app;
-        this.completeOrder = (data) => __awaiter(this, void 0, void 0, function* () {
+        this.completeMovement = (data) => __awaiter(this, void 0, void 0, function* () {
             var app = this.app;
             try {
                 /*await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\');', {});*/
                 return { success: true, data: [] };
             }
             catch (e) {
-                console.log('Error completeOrder: ', e.original);
+                console.log('Error completeMovement: ', e.original);
                 throw new Error(e.original);
             }
         });
@@ -34,7 +34,7 @@ class m_movement_btn_completeProcess {
     complete(params) {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
-            var ds = yield me.completeOrder(params);
+            var ds = yield me.completeMovement(params);
             return ds;
         });
     }

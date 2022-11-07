@@ -8,17 +8,17 @@ class m_inventory_btn_completeProcess {
     }
     async complete(params) {
         var me = this
-        var ds = await me.completeOrder(params)
+        var ds = await me.completeInventory(params)
         return ds
     }
 
-    completeOrder = async (data) => {
+    completeInventory = async (data) => {
         var app = this.app;
         try {
-            /*await app.db.sequelize.query('SELECT fn_complete_order(\'' + data.data.c_order_id + '\',\'' + data.jsontoken.ad_user_id + '\');', {});*/
+            await app.db.sequelize.query('SELECT fn_complete_inventory(\'' + data.data.m_inventory_id + '\',\'' + data.jsontoken.ad_user_id + '\',\'' + data.jsontoken.m_warehouse_id + '\');', {});
             return { success: true, data: [] };
         } catch (e) {
-            console.log('Error completeOrder: ', e.original)
+            console.log('Error completeInventory: ', e.original)
             throw new Error(e.original);
         }
     }

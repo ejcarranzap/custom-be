@@ -21,7 +21,12 @@ module.exports = (db) => {
         console.log('beforeCreate c_order');
         var ds;
         var t = yield db.sequelize.transaction({ autocommit: false });
-        db.sequelize.query('SELECT fn_gen_seq(\'SALE-\',\'' + row.constructor.name + '\',\'documentno\');', { transaction: t });
+        if (row.isstrx == 'Y') {
+            db.sequelize.query('SELECT fn_gen_seq(\'SALE-\',\'' + row.constructor.name + '\',\'documentno\');', { transaction: t });
+        }
+        else {
+            db.sequelize.query('SELECT fn_gen_seq(\'PRCH-\',\'' + row.constructor.name + '\',\'documentno\');', { transaction: t });
+        }
         var ds = yield db.sequelize.query('FETCH ALL IN "ref_data";', { transaction: t });
         t.commit();
         row.documentno = ds[0][0].seq;

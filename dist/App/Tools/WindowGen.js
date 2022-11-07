@@ -29,7 +29,7 @@ class WindowGen {
                 ret.description = values.description;
                 ret.active = (values.isactive == 'Y' ? 1 : 0);
                 ret.tabs = [];
-                ds = yield app.db.sequelize.models['ad_tab'].findAll({ where: { ad_window_id: id, ad_tab_parent_id: { [Op.eq]: null } } });
+                ds = yield app.db.sequelize.models['ad_tab'].findAll({ where: { ad_window_id: id, ad_tab_parent_id: { [Op.eq]: null } }, order: [['position', 'ASC']] });
                 for (var i = 0; i < ds.length; i++) {
                     let o = ds[i];
                     ret.tabs.push(yield me.getTab(o, null));
@@ -70,7 +70,7 @@ class WindowGen {
     getTabs(tab) {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
-            let ds = yield me.app.db.sequelize.models['ad_tab'].findAll({ where: { ad_tab_parent_id: { [Op.eq]: tab.id } } });
+            let ds = yield me.app.db.sequelize.models['ad_tab'].findAll({ where: { ad_tab_parent_id: { [Op.eq]: tab.id } }, order: [['position', 'ASC']] });
             for (var i = 0; i < ds.length; i++) {
                 let o = ds[i];
                 tab.tabs.push(yield me.getTab(o, tab));
