@@ -52,6 +52,14 @@ class MenuGen {
     getMenu(o) {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
+            var app = me.app;
+            var dsWin, valuesWin, ds, values;
+            if (o.ad_window_id != null) {
+                dsWin = yield app.db.sequelize.models['ad_window'].findOne({ where: { ad_window_id: o.ad_window_id } });
+                valuesWin = dsWin.dataValues;
+                ds = yield app.db.sequelize.models['ad_windowtype'].findOne({ where: { ad_windowtype_id: valuesWin.ad_windowtype_id } });
+                values = ds.dataValues;
+            }
             var menu = {};
             menu.id = o.ad_menu_id;
             menu.description = o.description;
@@ -60,7 +68,12 @@ class MenuGen {
             menu.child = [];
             yield me.getMenuChild(menu);
             if (menu.child.length == 0) {
-                menu.href = '/customviewV3/' + o.ad_window_id;
+                if (values && values.name.toLowerCase().includes('report')) {
+                    menu.href = '/customviewrptV3/' + o.ad_window_id;
+                }
+                else {
+                    menu.href = '/customviewV3/' + o.ad_window_id;
+                }
                 delete menu.child;
             }
             return menu;

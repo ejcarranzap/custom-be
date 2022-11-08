@@ -26,3 +26,24 @@ CREATE TABLE m_warehouse_stock
 	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT m_warehouse_stock_unique UNIQUE(m_warehouse_id,m_product_id)
 );
+
+DROP TABLE IF EXISTS ad_windowtype;
+
+CREATE TABLE ad_windowtype
+(
+    ad_windowtype_id CHARACTER VARYING(32) NOT NULL,
+    ad_org_id CHARACTER VARYING(32) NOT NULL,
+    ad_client_id CHARACTER VARYING(32) NOT NULL,
+    isactive CHARACTER VARYING(1) CHECK(isactive IN('Y','N')),
+    created TIMESTAMP NOT NULL DEFAULT NOW(),
+    createdby CHARACTER VARYING(32) NOT NULL,
+    updated TIMESTAMP NOT NULL DEFAULT NOW(),
+    updatedby CHARACTER VARYING(32) NOT NULL,
+	value CHARACTER VARYING(50) NULL,
+	name CHARACTER VARYING(100) NULL,
+    CONSTRAINT ad_windowtype_key PRIMARY KEY(ad_windowtype_id),
+    CONSTRAINT ad_windowtype_ad_client FOREIGN KEY (ad_client_id) REFERENCES ad_client(ad_client_id)
+    MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT ad_windowtype_ad_org FOREIGN KEY (ad_org_id) REFERENCES ad_org(ad_org_id)
+	MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION
+);
