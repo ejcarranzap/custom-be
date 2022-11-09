@@ -9,16 +9,21 @@ class WindowGen {
 
         /*var t = await app.db.sequelize.transaction({ autocommit: false });*/
         try {
-            var ds, ret, values
+            var ds, ret, values, dsWtype, valuesWtype
             ds = await app.db.sequelize.models['ad_window'].findOne({ where: { ad_window_id: id } })
             values = ds.dataValues
+
+            dsWtype = await app.db.sequelize.models['ad_windowtype'].findOne({ where: { ad_windowtype_id: values.ad_windowtype_id } })
+            valuesWtype = dsWtype.dataValues
+
             ret = {}
             ret.id = values.ad_window_id
             ret.description = values.description
             ret.active = (values.isactive == 'Y' ? 1 : 0)
             ret.tabs = []
+            ret.type = valuesWtype.name
 
-            ds = await app.db.sequelize.models['ad_tab'].findAll({ where: { ad_window_id: id, ad_tab_parent_id: { [Op.eq]: null } }, order: [['position','ASC']] })
+            ds = await app.db.sequelize.models['ad_tab'].findAll({ where: { ad_window_id: id, ad_tab_parent_id: { [Op.eq]: null } }, order: [['position', 'ASC']] })
 
             for (var i = 0; i < ds.length; i++) {
                 let o = ds[i]
@@ -36,7 +41,7 @@ class WindowGen {
     async getTab(o, parent) {
         var me = this
         let model = me.app.db.sequelize.models[o.value];
-        var modelKey = model.primaryKeyAttributes[0];
+        var modelKey = (model ? model.primaryKeyAttributes[0] : "");
         var tab: any = {}
         tab.id = o.ad_tab_id
         tab.restUrl = 'api/' + o.value
@@ -57,7 +62,7 @@ class WindowGen {
 
     async getTabs(tab) {
         var me = this
-        let ds = await me.app.db.sequelize.models['ad_tab'].findAll({ where: { ad_tab_parent_id: { [Op.eq]: tab.id } }, order: [['position','ASC']] })
+        let ds = await me.app.db.sequelize.models['ad_tab'].findAll({ where: { ad_tab_parent_id: { [Op.eq]: tab.id } }, order: [['position', 'ASC']] })
         for (var i = 0; i < ds.length; i++) {
             let o = ds[i]
             tab.tabs.push(await me.getTab(o, tab))
@@ -108,7 +113,7 @@ class WindowGen {
     async getTable(tab, o) {
         var me = this
         let dsTable = await me.app.db.sequelize.models['ad_table'].findOne({ where: { value: o.value } })
-        var valuesTable = dsTable.dataValues
+        var valuesTable = (dsTable ? dsTable.dataValues : {})
         var table: any = {}
         table.id = valuesTable.ad_table_id
         table.value = valuesTable.value

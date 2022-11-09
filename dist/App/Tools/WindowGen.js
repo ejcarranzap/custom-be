@@ -21,14 +21,17 @@ class WindowGen {
             var app = me.app;
             /*var t = await app.db.sequelize.transaction({ autocommit: false });*/
             try {
-                var ds, ret, values;
+                var ds, ret, values, dsWtype, valuesWtype;
                 ds = yield app.db.sequelize.models['ad_window'].findOne({ where: { ad_window_id: id } });
                 values = ds.dataValues;
+                dsWtype = yield app.db.sequelize.models['ad_windowtype'].findOne({ where: { ad_windowtype_id: values.ad_windowtype_id } });
+                valuesWtype = dsWtype.dataValues;
                 ret = {};
                 ret.id = values.ad_window_id;
                 ret.description = values.description;
                 ret.active = (values.isactive == 'Y' ? 1 : 0);
                 ret.tabs = [];
+                ret.type = valuesWtype.name;
                 ds = yield app.db.sequelize.models['ad_tab'].findAll({ where: { ad_window_id: id, ad_tab_parent_id: { [Op.eq]: null } }, order: [['position', 'ASC']] });
                 for (var i = 0; i < ds.length; i++) {
                     let o = ds[i];
@@ -47,7 +50,7 @@ class WindowGen {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
             let model = me.app.db.sequelize.models[o.value];
-            var modelKey = model.primaryKeyAttributes[0];
+            var modelKey = (model ? model.primaryKeyAttributes[0] : "");
             var tab = {};
             tab.id = o.ad_tab_id;
             tab.restUrl = 'api/' + o.value;
@@ -116,7 +119,7 @@ class WindowGen {
         return __awaiter(this, void 0, void 0, function* () {
             var me = this;
             let dsTable = yield me.app.db.sequelize.models['ad_table'].findOne({ where: { value: o.value } });
-            var valuesTable = dsTable.dataValues;
+            var valuesTable = (dsTable ? dsTable.dataValues : {});
             var table = {};
             table.id = valuesTable.ad_table_id;
             table.value = valuesTable.value;
