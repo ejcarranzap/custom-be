@@ -47,6 +47,7 @@ const MenuGen_1 = require("./Tools/MenuGen");
 const CallProcess_1 = require("./Tools/CallProcess");
 const UploadLink_1 = require("./Tools/UploadLink");
 const ReportLink_1 = require("./Tools/ReportLink");
+const CallReport_1 = require("./Tools/CallReport");
 class App {
     constructor() {
         this.db = { sequelize: null, types: null, bcrypt: null };
@@ -55,6 +56,7 @@ class App {
         this.routesPath = '';
         this.hooksPath = '';
         this.processPath = '';
+        this.reportPath = '';
         this.libsPath = '';
         this.rptsPath = '';
         console.log('App constructor');
@@ -112,6 +114,7 @@ class App {
                 this.wingen = new WindowGen_1.WindowGen(this);
                 this.menugen = new MenuGen_1.MenuGen(this);
                 this.callprocess = new CallProcess_1.CallProcess(this);
+                this.callreport = new CallReport_1.CallReport(this);
                 this.report = new ReportLink_1.ReportLink(this);
                 yield this.startServer();
             }
@@ -127,6 +130,7 @@ class App {
                 me.publicPath = Path.join(__dirname, '..//..//Public');
                 me.routesPath = './dist/App/Routes';
                 me.processPath = './dist/App/Process';
+                me.reportPath = './dist/App/Report';
                 me.hooksPath = Path.join(__dirname, './/Hooks');
                 me.libsPath = Path.join(__dirname, '..//..//..//libs');
                 me.rptsPath = Path.join(__dirname, '..//..//..//rpts//MyReports//');
@@ -204,6 +208,18 @@ class App {
                     console.log('loaded route: ' + filepath);
                 });
                 glob.sync(me.processPath + '/**/*.js', {
+                    root: __dirname
+                }).forEach(file => {
+                    console.log('File: ', file, ' __dirname ', __dirname);
+                    let basename = Path.basename(file).replace('.js', '');
+                    let filepath = '../../' + file;
+                    /*let filepath = Path.join(me.routesPath, basename);*/
+                    let cls = require(filepath);
+                    console.log(cls[Object.keys(cls)[0]], basename);
+                    me[basename] = new cls[Object.keys(cls)[0]](me);
+                    console.log('loaded process: ' + filepath);
+                });
+                glob.sync(me.reportPath + '/**/*.js', {
                     root: __dirname
                 }).forEach(file => {
                     console.log('File: ', file, ' __dirname ', __dirname);

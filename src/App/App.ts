@@ -13,6 +13,7 @@ import { MenuGen } from './Tools/MenuGen';
 import { CallProcess } from './Tools/CallProcess';
 import { UploadLink } from './Tools/UploadLink';
 import { ReportLink } from './Tools/ReportLink';
+import { CallReport } from './Tools/CallReport';
 
 class App {
     public sequelize
@@ -23,6 +24,7 @@ class App {
     public wingen
     public menugen
     public callprocess
+    public callreport
     public JWT
     public upload;
     public imgUrl;
@@ -32,6 +34,7 @@ class App {
     public routesPath: string = ''
     public hooksPath: string = ''
     public processPath: string = ''
+    public reportPath: string = ''
     public libsPath: string = ''
     public rptsPath: string = ''
 
@@ -63,13 +66,13 @@ class App {
                     hooks: {
                         beforeCreate: (model: any, options) => {
                             /*console.log(model.constructor.name);*/
-                            console.log('created hook')                            
+                            console.log('created hook')
                             var current = this.db.sequelize.fn('NOW');
                             model.updated = current
-                            model.created = current                            
+                            model.created = current
                         },
                         beforeUpdate: (model: any, options) => {
-                            console.log('updated hook')                            
+                            console.log('updated hook')
                             var current = this.db.sequelize.fn('NOW');
                             model.updated = current
                         },
@@ -94,6 +97,7 @@ class App {
             this.wingen = new WindowGen(this)
             this.menugen = new MenuGen(this)
             this.callprocess = new CallProcess(this)
+            this.callreport = new CallReport(this)
             this.report = new ReportLink(this)
 
             await this.startServer()
@@ -108,6 +112,7 @@ class App {
             me.publicPath = Path.join(__dirname, '..//..//Public');
             me.routesPath = './dist/App/Routes';
             me.processPath = './dist/App/Process';
+            me.reportPath = './dist/App/Report';
             me.hooksPath = Path.join(__dirname, './/Hooks');
             me.libsPath = Path.join(__dirname, '..//..//..//libs');
             me.rptsPath = Path.join(__dirname, '..//..//..//rpts//MyReports//');
@@ -200,6 +205,20 @@ class App {
             });
 
             glob.sync(me.processPath + '/**/*.js', {
+                root: __dirname
+            }).forEach(file => {
+                console.log('File: ', file, ' __dirname ', __dirname);
+                let basename = Path.basename(file).replace('.js', '');
+                let filepath = '../../' + file;
+                /*let filepath = Path.join(me.routesPath, basename);*/
+
+                let cls = require(filepath)
+                console.log(cls[Object.keys(cls)[0]], basename)
+                me[basename] = new cls[Object.keys(cls)[0]](me);
+                console.log('loaded process: ' + filepath);
+            });
+
+            glob.sync(me.reportPath + '/**/*.js', {
                 root: __dirname
             }).forEach(file => {
                 console.log('File: ', file, ' __dirname ', __dirname);

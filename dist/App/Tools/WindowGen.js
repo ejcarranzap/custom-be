@@ -53,6 +53,7 @@ class WindowGen {
             var modelKey = (model ? model.primaryKeyAttributes[0] : "");
             var tab = {};
             tab.id = o.ad_tab_id;
+            tab.value = o.value;
             tab.restUrl = 'api/' + o.value;
             tab.key = modelKey;
             if (parent)
@@ -106,6 +107,8 @@ class WindowGen {
                 field.readonly_logic = o.readonly_logic;
                 field.default_value = o.default_value;
                 field.position = o.position;
+                field.name = o.name;
+                field.description = o.description;
                 yield me.getColumn(field, o);
                 field.default = null;
                 field.visible = true;
@@ -137,8 +140,8 @@ class WindowGen {
             var col = {};
             col.id = valuesColumn.ad_column_id;
             col.name = valuesColumn.value;
-            col.description = valuesColumn.description;
-            col.label = valuesColumn.name;
+            col.description = field.description;
+            col.label = field.name;
             yield me.getDataType(col, valuesColumn);
             col.is_pk = (valuesColumn.ispk == 'Y' ? 1 : 0);
             field.column = col;
