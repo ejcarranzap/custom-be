@@ -3,7 +3,7 @@ import FileType from "file-type";
 
 class rpt_rpttestReport {
     constructor(private app: App) { }
-    async run(params, h) {
+    async run(params) {
         /*console.log('ad_table_btn_getcolProcess action called...', params)*/
         return await this.generateRpt(params)
     }
@@ -16,8 +16,8 @@ class rpt_rpttestReport {
     getRpt = async (data) => {
         var app = this.app;
         try {
-            var file_ = 'Report1Psql'
-            var comand = app.report.generateReport(file_, {})
+            var file_ = data.action
+            var comand = app.report.generateReport(file_, data.data, data.type)
             var exec = require('child_process').exec, buffer, mime
 
             console.log(comand)

@@ -20,8 +20,8 @@ class rpt_rpttestReport {
         this.getRpt = (data) => __awaiter(this, void 0, void 0, function* () {
             var app = this.app;
             try {
-                var file_ = 'Report1Psql';
-                var comand = app.report.generateReport(file_, {});
+                var file_ = data.action;
+                var comand = app.report.generateReport(file_, data.data, data.type);
                 var exec = require('child_process').exec, buffer, mime;
                 console.log(comand);
                 return yield new Promise(function (resolve, reject) {
@@ -43,7 +43,7 @@ class rpt_rpttestReport {
             }
         });
     }
-    run(params, h) {
+    run(params) {
         return __awaiter(this, void 0, void 0, function* () {
             /*console.log('ad_table_btn_getcolProcess action called...', params)*/
             return yield this.generateRpt(params);
