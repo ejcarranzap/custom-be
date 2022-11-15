@@ -138,7 +138,7 @@ class App {
                 console.log('routes path: ' + me.routesPath);
                 console.log('libs path: ' + me.libsPath);
                 console.log('rpts path: ' + me.rptsPath);
-                me.server = new hapi_1.Server({
+                me.server = yield new hapi_1.Server({
                     port: 3001,
                     host: 'localhost',
                     routes: {

@@ -123,7 +123,7 @@ class App {
             console.log('rpts path: ' + me.rptsPath);
 
 
-            me.server = new Server({
+            me.server = await new Server({
                 port: 3001,
                 host: 'localhost',
                 routes: {
