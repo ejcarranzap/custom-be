@@ -125,7 +125,7 @@ class App {
 
             me.server = await new Server({
                 port: 3001,
-                host: 'localhost',
+                host: '0.0.0.0',
                 routes: {
                     files: {
                         relativeTo: me.publicPath

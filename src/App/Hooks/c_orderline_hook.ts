@@ -30,18 +30,18 @@ export = (db) => {
     model.beforeCreate(async (row) => {
         console.log('beforeCreate c_orderline');
         await row.generateTotals(row);
+        await row.validateIsComplete(row);
     });
 
     model.beforeUpdate(async (row) => {
         console.log('beforeUpdate c_orderline');
         await row.generateTotals(row);
+        await row.validateIsComplete(row);
     });
 
     model.beforeDestroy(async (row) => {
-        console.log('beforeDestroy c_order');
-        var c_order = db.sequelize.models['c_order'];
-        var order = await c_order.findOne({ where: { c_order_id: row.c_order_id } });
-        await row.validateIsComplete(order);
+        console.log('beforeDestroy c_orderline');
+        await row.validateIsComplete(row);
     });
 
     model.prototype.udpateTotalH = async function (row, theader, op) {
@@ -49,11 +49,12 @@ export = (db) => {
         var header = await theader.findOne({ where: { c_order_id: row.c_order_id } });
         var lines = await tlines.findAll({ where: { c_order_id: row.c_order_id } });
 
-        if (op === 'D')
+        if (op === 'D') {
             lines = lines.filter(o => {
                 return (o.c_orderline_id !== row.c_orderline_id)
             });
-
+            console.log('c_orderline', lines)
+        }
 
         header = header.dataValues;
 
@@ -62,14 +63,19 @@ export = (db) => {
         header.tax = 0.0;
         header.total = 0.0;
         for (var i = 0; i < lines.length; i++) {
-            header.discount = parseFloat(header.discount) + parseFloat(lines[i].discount);
-            header.subtotal = parseFloat(header.subtotal) + parseFloat(lines[i].subtotal);
-            header.tax = parseFloat(header.tax) + parseFloat(lines[i].linetax);
-            header.total = parseFloat(header.total) + parseFloat(lines[i].linetotal);
+            if (op == 'D' && lines[i].c_orderline_id == row.c_orderline_id) {
+            } else {
+                header.discount = parseFloat(header.discount) + parseFloat(lines[i].discount);
+                header.subtotal = parseFloat(header.subtotal) + parseFloat(lines[i].subtotal);
+                header.tax = parseFloat(header.tax) + parseFloat(lines[i].linetax);
+                header.total = parseFloat(header.total) + parseFloat(lines[i].linetotal);
+            }
         }
 
         delete header.updated;
         delete header.created;
+
+        console.log('header', header)
         await theader.update(header, { where: { c_order_id: row.c_order_id } });
         /*console.log('header: ', header);*/
     };

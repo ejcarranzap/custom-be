@@ -140,7 +140,7 @@ class App {
                 console.log('rpts path: ' + me.rptsPath);
                 me.server = yield new hapi_1.Server({
                     port: 3001,
-                    host: 'localhost',
+                    host: '0.0.0.0',
                     routes: {
                         files: {
                             relativeTo: me.publicPath
