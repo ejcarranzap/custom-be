@@ -39,5 +39,8 @@ module.exports = (db) => {
         console.log('beforeDestroy c_order');
         yield row.validateIsComplete(row);
     }));
+    model.afterUpdate((row) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log('afterUpdate c_order');
+    }));
 };
 //# sourceMappingURL=c_order_hook.js.map

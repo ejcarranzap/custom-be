@@ -46,37 +46,37 @@ module.exports = (db) => {
     }));
     model.beforeDestroy((row) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('beforeDestroy c_orderline');
+        yield row.generateTotals(row);
         yield row.validateIsComplete(row);
     }));
-    model.prototype.udpateTotalH = function (row, theader, op) {
+    model.prototype.updateTotalH = function (row, theader, op) {
         return __awaiter(this, void 0, void 0, function* () {
             var tlines = db.sequelize.models['c_orderline'];
             var header = yield theader.findOne({ where: { c_order_id: row.c_order_id } });
             var lines = yield tlines.findAll({ where: { c_order_id: row.c_order_id } });
-            if (op === 'D') {
+            /*if (op === 'D') {
                 lines = lines.filter(o => {
-                    return (o.c_orderline_id !== row.c_orderline_id);
+                    return (o.c_orderline_id !== row.c_orderline_id)
                 });
-                console.log('c_orderline', lines);
-            }
-            header = header.dataValues;
+                console.log('c_orderline', lines)
+            }*/
+            header = {};
             header.discount = 0.0;
             header.subtotal = 0.0;
             header.tax = 0.0;
             header.total = 0.0;
             for (var i = 0; i < lines.length; i++) {
+                /*console.log('c_order_line_id', op, lines[i].c_orderline_id, row.c_orderline_id)
                 if (op == 'D' && lines[i].c_orderline_id == row.c_orderline_id) {
-                }
-                else {
-                    header.discount = parseFloat(header.discount) + parseFloat(lines[i].discount);
-                    header.subtotal = parseFloat(header.subtotal) + parseFloat(lines[i].subtotal);
-                    header.tax = parseFloat(header.tax) + parseFloat(lines[i].linetax);
-                    header.total = parseFloat(header.total) + parseFloat(lines[i].linetotal);
-                }
+                    console.log('DELETED ROW')
+                } else {*/
+                header.discount = parseFloat(header.discount) + parseFloat(lines[i].discount);
+                header.subtotal = parseFloat(header.subtotal) + parseFloat(lines[i].subtotal);
+                header.tax = parseFloat(header.tax) + parseFloat(lines[i].linetax);
+                header.total = parseFloat(header.total) + parseFloat(lines[i].linetotal);
+                /*}*/
             }
-            delete header.updated;
-            delete header.created;
-            console.log('header', header);
+            /*console.log('header', header, row.c_order_id)*/
             yield theader.update(header, { where: { c_order_id: row.c_order_id } });
             /*console.log('header: ', header);*/
         });
@@ -84,17 +84,17 @@ module.exports = (db) => {
     model.afterCreate((row) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('afterCreate c_orderline');
         var c_order = db.sequelize.models['c_order'];
-        row.udpateTotalH(row, c_order);
+        row.updateTotalH(row, c_order);
     }));
     model.afterUpdate((row) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('afterUpdate c_orderline');
         var c_order = db.sequelize.models['c_order'];
-        row.udpateTotalH(row, c_order);
+        row.updateTotalH(row, c_order);
     }));
     model.afterDestroy((row) => __awaiter(void 0, void 0, void 0, function* () {
         console.log('afterDestroy c_orderline');
         var c_order = db.sequelize.models['c_order'];
-        row.udpateTotalH(row, c_order, 'D');
+        row.updateTotalH(row, c_order);
     }));
 };
 //# sourceMappingURL=c_orderline_hook.js.map
