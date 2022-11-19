@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const FileType = require('file-type');
 module.exports = (app) => {
     return {
         method: 'POST',
@@ -19,7 +20,29 @@ module.exports = (app) => {
                 var res = request.payload;
                 res.jsontoken = jsontoken;
                 var data = yield app.callprocess.run(res);
-                return { success: true, data: data, msg: 'ProcessAction' };
+                if (Buffer.isBuffer(data)) {
+                    var mime = yield FileType.fromBuffer(data);
+                    if (mime == null) {
+                        mime = {};
+                        mime.ext = 'txt';
+                        mime.mime = 'text/plain';
+                        data = data.toString('base64');
+                    }
+                    else if (res.mimeType == 'xls') {
+                        mime.ext = 'xls';
+                        mime.mime = 'application/vnd.ms-excel';
+                        /*mime.mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'*/
+                    }
+                    else if (res.mimeType == 'doc') {
+                        mime.ext = 'doc';
+                        mime.mime = 'application/msword';
+                        /*mime.mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'*/
+                    }
+                    return h.response(data).header('Content-Type', mime.mime).header('Cache-Control', 'no-cache');
+                }
+                else {
+                    return { success: true, data: data, msg: 'ProcessAction' };
+                }
             }
             catch (e) {
                 console.log(e.stack);
