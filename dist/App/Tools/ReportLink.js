@@ -14,7 +14,8 @@ class ReportLink {
         console.log(opsys);
         var currentPath = me.app.rptsPath;
         /*var comand = 'java -jar ./JCReportTool_V3.jar "' + currentPath + '" "' + tempFolder + '" "' + rptName + '" "{}"'*/
-        var comand = 'java -jar ./JCReportTool_V3.jar "' + currentPath + '" "' + tempFolder + '" "' + rptName + '" "' + JSON.stringify(rptParams).split('"').join('\\"') + '" "' + rptExportType + '"';
+        var comand = 'java -jar ./JasperReportsV2.jar "' + currentPath + '" "' + tempFolder + '" "' + rptName + '" "' + JSON.stringify(rptParams).split('"').join('\\"') + '" "' + rptExportType + '"';
+        /*var comand = 'java -jar ./JCReportTool_V3.jar "' + currentPath + '" "' + tempFolder + '" "' + rptName + '" "' + JSON.stringify(rptParams).split('"').join('\\"') + '" "' + rptExportType + '"'*/
         return comand;
     }
 }

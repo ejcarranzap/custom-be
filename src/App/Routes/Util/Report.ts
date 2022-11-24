@@ -13,9 +13,12 @@ export = (app) => {
         handler: async (request, h) => {
             try {
                 var file_ = 'Report1Psql'
-                var comand = app.report.generateReport(file_, {})
+                var comand = app.report.generateReport(file_, {}, 'pdf')
                 var exec = require('child_process').exec, buffer, mime
 
+                mime = {
+                    mime: 'application/pdf'
+                }
                 console.log(comand)
 
                 return h.response(await new Promise(function(resolve, reject) {
@@ -28,7 +31,7 @@ export = (app) => {
                         
                         buffer = Buffer.from(stdout, 'base64')
                         /*mime = 'application/pdf'*/
-                        mime = await FileType.fromBuffer(buffer)
+                        /*mime = await FileType.fromBuffer(buffer)*/
                         resolve(buffer);
                     });
                 })).header('Content-Type', mime.mime).header('Cache-Control', 'no-cache')

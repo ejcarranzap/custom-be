@@ -21,8 +21,11 @@ module.exports = (app) => {
         handler: (request, h) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 var file_ = 'Report1Psql';
-                var comand = app.report.generateReport(file_, {});
+                var comand = app.report.generateReport(file_, {}, 'pdf');
                 var exec = require('child_process').exec, buffer, mime;
+                mime = {
+                    mime: 'application/pdf'
+                };
                 console.log(comand);
                 return h.response(yield new Promise(function (resolve, reject) {
                     exec(comand, { cwd: app.libsPath }, (error, stdout, stderr) => __awaiter(this, void 0, void 0, function* () {
@@ -32,7 +35,7 @@ module.exports = (app) => {
                         }
                         buffer = Buffer.from(stdout, 'base64');
                         /*mime = 'application/pdf'*/
-                        mime = yield FileType.fromBuffer(buffer);
+                        /*mime = await FileType.fromBuffer(buffer)*/
                         resolve(buffer);
                     }));
                 })).header('Content-Type', mime.mime).header('Cache-Control', 'no-cache');
