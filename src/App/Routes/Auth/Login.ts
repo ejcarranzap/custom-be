@@ -42,7 +42,7 @@ export = (app) => {
                 ds.dataValues.org = dsOrg.dataValues.name;
                 ds.dataValues.m_warehouse_id = res.m_warehouse_id;
 
-                return { success: true, accessToken: app.JWT.sign(ds.dataValues, app.secret), user: ds.dataValues };
+                return { success: true, accessToken: app.JWT.sign(ds.dataValues, app.secret), user: ds.dataValues, code: 0, msg: 'Login exitoso' };
             } catch (e) {
                 console.log(e.stack);
                 /*t.rollback();*/

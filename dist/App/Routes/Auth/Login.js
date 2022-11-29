@@ -45,7 +45,7 @@ module.exports = (app) => {
                 ds.dataValues.ad_package_id = '0';
                 ds.dataValues.org = dsOrg.dataValues.name;
                 ds.dataValues.m_warehouse_id = res.m_warehouse_id;
-                return { success: true, accessToken: app.JWT.sign(ds.dataValues, app.secret), user: ds.dataValues };
+                return { success: true, accessToken: app.JWT.sign(ds.dataValues, app.secret), user: ds.dataValues, code: 0, msg: 'Login exitoso' };
             }
             catch (e) {
                 console.log(e.stack);
