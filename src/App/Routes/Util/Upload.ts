@@ -7,7 +7,7 @@ export = (app) => {
         path: '/api/Upload',
         method: 'POST',
         options: {
-            auth: 'jwt',
+            auth: false,
             cors: true,
             payload: {
                 maxBytes: 1024 * 1024 * 5,
@@ -24,7 +24,7 @@ export = (app) => {
                 var data: any = {};
 
                 var basename = '';
-                /*console.log(res, params);*/
+                console.log(res, params);
                 for (const key in res) {
                     const file = res[key];
                     if (!file) continue;
@@ -43,7 +43,7 @@ export = (app) => {
                     data.filename = basename;
                 }
 
-                return { success: true, mensaje: 'Operación exitosa.', data: data };
+                return { success: true, msg: 'Operación exitosa.', data: data };
             } catch (e) {
                 console.log(e.stack);
                 throw new Error(e.message);
