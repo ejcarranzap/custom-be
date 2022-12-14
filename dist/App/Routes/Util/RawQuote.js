@@ -19,6 +19,7 @@ module.exports = (app) => {
         },
         handler: (request, h) => __awaiter(void 0, void 0, void 0, function* () {
             try {
+                console.log('RawQuote');
                 var json = [
                     { "author": "Anonymous", "quote": "It’s not a bug. It’s an undocumented feature!" },
                     { "author": "Anonymous", "quote": "Software Developer” – An organism that turns caffeine into software" },
