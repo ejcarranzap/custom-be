@@ -274,8 +274,8 @@ class ModuleGen {
         const table_name = table.table_name;
         var fn = function (request, h) {
             return __awaiter(this, void 0, void 0, function* () {
-                console.log('request post: ', request.payload);
-                console.log('headers: ', request.headers);
+                /*console.log('request post: ', request.payload)
+                console.log('headers: ', request.headers)*/
                 const db = app.db;
                 /*var t = await db.sequelize.transaction({ autocommit: false });*/
                 const jsontoken = app.JWT.decode(request.headers.authorization.split(' ')[1], app.secret);
