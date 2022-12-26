@@ -51,7 +51,7 @@ class App {
 
             require('pg').types.setTypeParser(1114, function (stringValue) {
                 /*console.log('stringValue: ', stringValue)*/
-                return stringValue.substring(0, 10) + 'T' + stringValue.substring(11) + '.000Z';
+                return stringValue.substring(0, 10) + 'T' + stringValue.substring(11).substring(0,8) + '.000Z';
             })
 
             this.db.sequelize = new Sequelize('test', 'admin', '1234', {

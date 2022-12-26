@@ -162,6 +162,8 @@ class ModuleGen {
 
         const table_name = table.table_name
         var fn = async function (request, h) {
+            /*console.log('request post: ', request.payload)
+            console.log('headers: ', request.headers)*/
             const db = app.db
             /*var t = await db.sequelize.transaction({ autocommit: false });*/
             const jsontoken = app.JWT.decode(request.headers.authorization.split(' ')[1], app.secret)
@@ -170,7 +172,10 @@ class ModuleGen {
             try {
                 var ds
                 let model = db.sequelize.models[table_name];
+                var modelKey = model.primaryKeyAttributes[0];
                 var idata = request.payload
+
+                delete idata[modelKey]
 
                 delete idata.updated
                 delete idata.created
@@ -183,6 +188,7 @@ class ModuleGen {
 
                 /*t.commit();*/
 
+                console.log('data', ds.dataValues)
                 if (ds)
                     return { success: true, data: ds.dataValues };
                 else
