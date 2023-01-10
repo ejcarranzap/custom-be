@@ -158,6 +158,10 @@ class WindowGen {
             col.icon = o.icon
         }
 
+        if(col.type == 'popup'){
+            
+        }
+
     }
 
     async getObjDataType(type) {

@@ -76,7 +76,6 @@ module.exports = (app) => {
                     }
                     data.filename = basename;
                 }
-                console.log('upload data: ', data);
                 return { success: true, msg: 'Operación exitosa.', data: data };
             }
             catch (e) {

@@ -164,6 +164,8 @@ class WindowGen {
                 col.cancelLabel = 'Cancel';
                 col.icon = o.icon;
             }
+            if (col.type == 'popup') {
+            }
         });
     }
     getObjDataType(type) {
