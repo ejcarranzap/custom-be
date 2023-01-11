@@ -109,6 +109,7 @@ class WindowGen {
                 field.position = o.position;
                 field.name = o.name;
                 field.description = o.description;
+                field.viewpath = o.viewpath;
                 yield me.getColumn(field, o);
                 field.default = null;
                 field.visible = true;
@@ -163,8 +164,6 @@ class WindowGen {
                 col.okLabel = 'Ok';
                 col.cancelLabel = 'Cancel';
                 col.icon = o.icon;
-            }
-            if (col.type == 'popup') {
             }
         });
     }

@@ -101,6 +101,7 @@ class WindowGen {
             field.position = o.position
             field.name = o.name
             field.description = o.description
+            field.viewpath = o.viewpath
 
             await me.getColumn(field, o)
 
@@ -156,10 +157,6 @@ class WindowGen {
             col.okLabel = 'Ok'
             col.cancelLabel = 'Cancel'
             col.icon = o.icon
-        }
-
-        if(col.type == 'popup'){
-            
         }
 
     }
